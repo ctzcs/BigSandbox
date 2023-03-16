@@ -6,54 +6,71 @@ namespace MyFlowField
     public class FlowField
 	{
 		//所有的格子
-		public Cell[,] grid { get; private set; }
+		public Cell[,] grids { get; private set; }
 		//格子的横纵数量
 		public Vector2Int gridSize { get; private set; }
 		//格子的半径
 		public float cellRadius { get; private set; }
+		//最终寻路所需目标格子
 		public Cell destinationCell;
+		//格子的直径
+		private float m_cellDiameter;
+		//创建格子的起点
+		private Vector3 m_startPoint;
 
-		private float cellDiameter;
-		private Vector3 startPoint;
-
-		public FlowField(float _cellRadius, Vector2Int _gridSize)
+		public FlowField(float _cellRadius, Vector2Int _gridSize,Vector3 _startPoint)
 		{
 			cellRadius = _cellRadius;
-			cellDiameter = cellRadius * 2f;
+			m_cellDiameter = cellRadius * 2f;
 			gridSize = _gridSize;
+			m_startPoint = _startPoint;
 		}
 
-		public void CreateGrid(Vector3 start)
+		#region Helper
+		
+
+		#endregion
+		
+		/// <summary>
+		/// 根据世界坐标，创建格子
+		/// </summary>
+		public void CreateGrid()
 		{
-			grid = new Cell[gridSize.x, gridSize.y];
-			startPoint = start;
+			grids = new Cell[gridSize.x, gridSize.y];
 			for (int x = 0; x < gridSize.x; x++)
 			{
 				for (int y = 0; y < gridSize.y; y++)
 				{
 					//修改世界坐标grid
-					Vector3 worldPos = startPoint + new Vector3(cellDiameter * x + cellRadius, cellDiameter * y + cellRadius,0 ) ;
-					grid[x, y] = new Cell(worldPos, new Vector2Int(x, y));
+					Vector3 worldPos = m_startPoint + new Vector3(m_cellDiameter * x + cellRadius, m_cellDiameter * y + cellRadius,0 ) ;
+					grids[x, y] = new Cell(worldPos, new Vector2Int(x, y));
 				}
 			}
 		}
-
+		
+		/// <summary>
+		/// 根据场景上的碰撞,创建场的花费
+		/// </summary>
 		public void CreateCostField()
 		{
 			Vector3 cellHalfExtents = Vector3.one * cellRadius;
 			int terrainMask = LayerMask.GetMask("Impassible", "RoughTerrain");
-			foreach (Cell curCell in grid)
+			//这里暂时设置最多有是个障碍物
+			Collider2D[] obstacles = new Collider2D[10];
+			//这就是遍历每个Cell，如果cell中有障碍物，就将这个cell设置成255
+			//如果是沙地设置成3
+			foreach (Cell curCell in grids)
 			{
-				Collider2D[] obstacles = Physics2D.OverlapBoxAll(startPoint+ curCell.worldPos, cellHalfExtents,0, terrainMask);
+				int count = Physics2D.OverlapBoxNonAlloc(m_startPoint+ curCell.worldPos, cellHalfExtents,0, obstacles,terrainMask);
 				bool hasIncreasedCost = false;
-				foreach (Collider2D col in obstacles)
+				for (int i = 0; i < count; i++)
 				{
-					if (col.gameObject.layer == 8)
+					if (obstacles[i].gameObject.layer == 8)
 					{
 						curCell.IncreaseCost(255);
 						continue;
 					}
-					else if (!hasIncreasedCost && col.gameObject.layer == 9)
+					if (!hasIncreasedCost && obstacles[i].gameObject.layer == 9)
 					{
 						curCell.IncreaseCost(3);
 						hasIncreasedCost = true;
@@ -61,22 +78,39 @@ namespace MyFlowField
 				}
 			}
 		}
-
+		/// <summary>
+		/// 设置一个目标点，然后改变周围的花费
+		/// </summary>
+		/// <param name="_destinationCell"></param>
 		public void CreateIntegrationField(Cell _destinationCell)
 		{
+			if (destinationCell != null 
+			    && destinationCell != _destinationCell)
+			{
+				destinationCell.cost = 1;
+				destinationCell.bestCost = ushort.MaxValue;
+				//将所有的格子里的最小花费重置。
+				foreach (var cell in grids)
+				{
+					cell.bestCost = ushort.MaxValue;
+				}
+			}
 			destinationCell = _destinationCell;
 
 			destinationCell.cost = 0;
 			destinationCell.bestCost = 0;
-
+			
+			//创建一个需要检查的队列
 			Queue<Cell> cellsToCheck = new Queue<Cell>();
-
+			//将目标入队
 			cellsToCheck.Enqueue(destinationCell);
-
+			//只要队列中还有元素，一直检查
 			while(cellsToCheck.Count > 0)
 			{
+				//出队，获取Cell的邻居网格
 				Cell curCell = cellsToCheck.Dequeue();
 				List<Cell> curNeighbors = GetNeighborCells(curCell.gridIndex, GridDirection.CardinalDirections);
+				//如果邻居花费和当前细胞花费的总和小于邻居的最小消耗，那么修改最小消耗，将邻居入队
 				foreach (Cell curNeighbor in curNeighbors)
 				{
 					if (curNeighbor.cost == byte.MaxValue) { continue; }
@@ -88,10 +122,12 @@ namespace MyFlowField
 				}
 			}
 		}
-
+		/// <summary>
+		/// 根据最小消耗创建流场的方向
+		/// </summary>
 		public void CreateFlowField()
 		{
-			foreach(Cell curCell in grid)
+			foreach(Cell curCell in grids)
 			{
 				List<Cell> curNeighbors = GetNeighborCells(curCell.gridIndex, GridDirection.AllDirections);
 
@@ -107,7 +143,13 @@ namespace MyFlowField
 				}
 			}
 		}
-
+		
+		/// <summary>
+		/// 获取邻居网格
+		/// </summary>
+		/// <param name="nodeIndex"></param>
+		/// <param name="directions"></param>
+		/// <returns></returns>
 		private List<Cell> GetNeighborCells(Vector2Int nodeIndex, List<GridDirection> directions)
 		{
 			List<Cell> neighborCells = new List<Cell>();
@@ -132,21 +174,21 @@ namespace MyFlowField
 				return null;
 			}
 
-			else { return grid[finalPos.x, finalPos.y]; }
+			else { return grids[finalPos.x, finalPos.y]; }
 		}
 
 		public Cell GetCellFromWorldPos(Vector3 worldPos)
 		{
-			var pos = worldPos + startPoint; 
-			float percentX = worldPos.x  / (gridSize.x * cellDiameter);
-			float percentY = worldPos.y / (gridSize.y * cellDiameter);
+			var pos = worldPos + m_startPoint; 
+			float percentX = pos.x  / (gridSize.x * m_cellDiameter);
+			float percentY = pos.y / (gridSize.y * m_cellDiameter);
 
 			percentX = Mathf.Clamp01(percentX);
 			percentY = Mathf.Clamp01(percentY);
 
 			int x = Mathf.Clamp(Mathf.FloorToInt((gridSize.x) * percentX), 0, gridSize.x - 1);
 			int y = Mathf.Clamp(Mathf.FloorToInt((gridSize.y) * percentY), 0, gridSize.y - 1);
-			return grid[x, y];
+			return grids[x, y];
 		}
 	}
 

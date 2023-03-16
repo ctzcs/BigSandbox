@@ -52,7 +52,7 @@ public class GridDebug : MonoBehaviour
 	private void DisplayAllCells()
 	{
 		if (curFlowField == null) { return; }
-		foreach (Cell curCell in curFlowField.grid)
+		foreach (Cell curCell in curFlowField.grids)
 		{
 			DisplayCell(curCell);
 		}
@@ -168,7 +168,7 @@ public class GridDebug : MonoBehaviour
 		{
 			case FlowFieldDisplayType.CostField:
 
-				foreach (Cell curCell in curFlowField.grid)
+				foreach (Cell curCell in curFlowField.grids)
 				{
 					Handles.Label(curCell.worldPos, curCell.cost.ToString(), style);
 				}
@@ -176,7 +176,7 @@ public class GridDebug : MonoBehaviour
 				
 			case FlowFieldDisplayType.IntegrationField:
 
-				foreach (Cell curCell in curFlowField.grid)
+				foreach (Cell curCell in curFlowField.grids)
 				{
 					Handles.Label(curCell.worldPos, curCell.bestCost.ToString(), style);
 				}

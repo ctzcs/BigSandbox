@@ -11,13 +11,13 @@ namespace MyFlowField
         public Transform spawnerPoint;
         public int numUnitsPerSpawn;
         public float moveSpeed;
-    
+     
         private List<GameObject> unitsInGame;
     
     	private void Awake()
     	{
     		unitsInGame = new List<GameObject>();
-    	}
+        }
     
     	void Update()
     	{
@@ -60,12 +60,12 @@ namespace MyFlowField
     			GameObject newUnit = Instantiate(unitPrefab);
     			newUnit.transform.parent = transform;
     			unitsInGame.Add(newUnit);
-    			do
-    			{
+    			// do
+    			// {
     				newPos = new Vector3(Random.Range(0, maxSpawnPos.x), Random.Range(0, maxSpawnPos.y), 0);
     				newUnit.transform.position = newPos;
-    			}
-    			while (Physics.OverlapSphere(newPos, 0.25f, colMask).Length > 0);
+    			// }
+    			// while (Physics.OverlapSphere(newPos, 0.25f, colMask).Length > 0);
     		}
     	}
     
@@ -93,8 +93,10 @@ namespace MyFlowField
 			        return 1;
 		        }
 	        });
+	        // SortByDistance();
 	        for (int i = 0; i < unitsInGame.Count; i++)
 	        {
+		        //这里也是可以优化的
 		        SortingGroup c = unitsInGame[i].GetComponent<SortingGroup>();
 		        if (c != null)
 		        {
@@ -103,6 +105,24 @@ namespace MyFlowField
 		        
 	        }
         }
+
+        private void SortByDistance()
+        {
+	        unitsInGame.Sort((a,b) =>
+	        {
+		        if (Vector3.Distance(a.transform.position,Vector3.zero) > Vector3.Distance(b.transform.position,Vector3.zero))
+		        {
+			        return -1;
+		        }
+		        else
+		        {
+			        return 1;
+		        }
+	        });
+	        
+	        
+        }
+        
     }
 
 }
