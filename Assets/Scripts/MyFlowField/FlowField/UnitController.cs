@@ -30,6 +30,7 @@ namespace MyFlowField
     		{
     			DestroyUnits();
     		}
+            //UnitRender();
     	}
     
     	private void FixedUpdate()
@@ -45,7 +46,7 @@ namespace MyFlowField
     			Rigidbody2D unitRB = unit.GetComponent<Rigidbody2D>();
     			unitRB.velocity = moveDirection * moveSpeed;
     		}
-            UnitRender();
+            
     	}
     
     	private void SpawnUnits()
@@ -105,24 +106,8 @@ namespace MyFlowField
 		        
 	        }
         }
-
-        private void SortByDistance()
-        {
-	        unitsInGame.Sort((a,b) =>
-	        {
-		        if (Vector3.Distance(a.transform.position,Vector3.zero) > Vector3.Distance(b.transform.position,Vector3.zero))
-		        {
-			        return -1;
-		        }
-		        else
-		        {
-			        return 1;
-		        }
-	        });
-	        
-	        
-        }
+        
         
     }
-
+	
 }
