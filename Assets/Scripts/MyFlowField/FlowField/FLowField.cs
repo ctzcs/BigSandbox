@@ -25,11 +25,7 @@ namespace MyFlowField
 			gridSize = _gridSize;
 			m_startPoint = _startPoint;
 		}
-
-		#region Helper
 		
-
-		#endregion
 		
 		/// <summary>
 		/// 根据世界坐标，创建格子
@@ -145,7 +141,7 @@ namespace MyFlowField
 		}
 		
 		/// <summary>
-		/// 获取邻居网格
+		/// 获取邻居格子
 		/// </summary>
 		/// <param name="nodeIndex"></param>
 		/// <param name="directions"></param>
@@ -164,7 +160,13 @@ namespace MyFlowField
 			}
 			return neighborCells;
 		}
-
+		
+		/// <summary>
+		/// 通过索引获取相关位置的格子
+		/// </summary>
+		/// <param name="orignPos"></param>
+		/// <param name="relativePos"></param>
+		/// <returns></returns>
 		private Cell GetCellAtRelativePos(Vector2Int orignPos, Vector2Int relativePos)
 		{
 			Vector2Int finalPos = orignPos + relativePos;
@@ -176,7 +178,12 @@ namespace MyFlowField
 
 			else { return grids[finalPos.x, finalPos.y]; }
 		}
-
+		
+		/// <summary>
+		/// 从世界坐标获取格子
+		/// </summary>
+		/// <param name="worldPos"></param>
+		/// <returns></returns>
 		public Cell GetCellFromWorldPos(Vector3 worldPos)
 		{
 			var pos = worldPos + m_startPoint; 

@@ -30,8 +30,7 @@ namespace MyFlowField
     		{
     			DestroyUnits();
     		}
-            //UnitRender();
-    	}
+        }
     
     	private void FixedUpdate()
     	{
@@ -69,8 +68,8 @@ namespace MyFlowField
     			// while (Physics.OverlapSphere(newPos, 0.25f, colMask).Length > 0);
     		}
     	}
-    
-    	private void DestroyUnits()
+
+        private void DestroyUnits()
     	{
     		foreach (GameObject go in unitsInGame)
     		{
@@ -79,35 +78,6 @@ namespace MyFlowField
     		unitsInGame.Clear();
     	}
 
-        
-        
-        private void UnitRender()
-        {
-	        unitsInGame.Sort((a,b) =>
-	        {
-		        if (a.transform.position.y > b.transform.position.y)
-		        {
-			        return -1;
-		        }
-		        else
-		        {
-			        return 1;
-		        }
-	        });
-	        // SortByDistance();
-	        for (int i = 0; i < unitsInGame.Count; i++)
-	        {
-		        //这里也是可以优化的
-		        SortingGroup c = unitsInGame[i].GetComponent<SortingGroup>();
-		        if (c != null)
-		        {
-			        c.sortingOrder = i;
-		        }
-		        
-	        }
-        }
-        
-        
     }
 	
 }
