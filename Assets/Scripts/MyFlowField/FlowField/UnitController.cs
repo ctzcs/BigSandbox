@@ -17,6 +17,7 @@ namespace MyFlowField
     	private void Awake()
     	{
     		unitsInGame = new List<GameObject>();
+            Application.targetFrameRate = 120;
         }
     
     	void Update()
@@ -45,6 +46,7 @@ namespace MyFlowField
     			Vector3 moveDirection = new Vector3(cellBelow.bestDirection.Vector.x, cellBelow.bestDirection.Vector.y,0);
     			// position += moveDirection * (Time.fixedDeltaTime * moveSpeed);
     			// unit.transform.position = position;
+                /*unit.GetComponent<Rigidbody2D>().velocity = moveSpeed * moveDirection;*/
                 unit.GetComponent<FBoid>().FlowPath(moveDirection);
             }
             

@@ -26,6 +26,11 @@ namespace MyFlowField
 		///获取邻居的容器，因为每帧调用这里为了节省内存
 		/// </summary>
 		private List<Cell> _neighborCells;
+
+		public FlowField()
+		{
+			
+		}
 		public FlowField(float _cellRadius, Vector2Int _gridSize,Vector3 _startPoint)
 		{
 			cellRadius = _cellRadius;
@@ -91,7 +96,7 @@ namespace MyFlowField
 		public void CreateIntegrationField(Cell _destinationCell)
 		{
 			if (destinationCell != null 
-			    && destinationCell != _destinationCell)
+				&& destinationCell != _destinationCell)
 			{
 				destinationCell.cost = 1;
 				destinationCell.bestCost = ushort.MaxValue;
@@ -206,6 +211,27 @@ namespace MyFlowField
 			int x = Mathf.Clamp(Mathf.FloorToInt((gridSize.x) * percentX), 0, gridSize.x - 1);
 			int y = Mathf.Clamp(Mathf.FloorToInt((gridSize.y) * percentY), 0, gridSize.y - 1);
 			return grids[x, y];
+		}
+
+		/// <summary>
+		/// 寻路方法
+		/// </summary>
+		/// <param name="request"></param>
+		/// <param name="callback"></param>
+		public void FindPath(PathRequest request,Action<PathResult> callback)
+		{
+			FlowField curFlowField;
+			curFlowField = new FlowField(request.CellRadius, request.GridSize,request.StartPosition);
+			curFlowField.CreateGrid();
+			Cell destinationCell = curFlowField.GetCellFromWorldPos(request.Target);
+			curFlowField.CreateIntegrationField(destinationCell);
+			curFlowField.CreateFlowField();
+			PathResult result = new PathResult(curFlowField,true,request.Callback);
+			if (callback != null)
+			{
+				callback(result);
+			}
+			
 		}
 	}
 

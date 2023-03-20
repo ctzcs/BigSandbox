@@ -1,7 +1,7 @@
-using System;
-using System.Collections.Generic;
+
+using System.Collections;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
+
 
 namespace MyFlowField
 {
@@ -23,17 +23,28 @@ namespace MyFlowField
         private Transform _player;
         //现在的格子
         private Cell nowCell;
-        
-        
+        private int countPer = 0;
+        private bool r;
 
         private void Start()
         {
             _player = player.transform;
-            InitializeFlowField();
+            /*InitializeFlowField();
             curFlowField.CreateCostField();
-            OverrideFlowField();
+            OverrideFlowField();*/
+            PathRequest request = new PathRequest(_player.position,spawnerPoint.position,gridSize,cellRadius,GetField);
+            FieldRequestManager.FlowFieldRequest(request);
+            r = true;
+            StartCoroutine("Request");
         }
-        
+
+        void GetField(FlowField field, bool b)
+        {
+            if (b)
+            {
+                curFlowField = field;
+            }
+        }
         /// <summary>
         /// 初始化场域
         /// </summary>
@@ -43,6 +54,8 @@ namespace MyFlowField
             curFlowField.CreateGrid();
             gridDebug.SetFlowField(curFlowField);
         }
+        
+        
         
         /// <summary>
         /// 由于场域是规则的，所以可以每帧重写场域中的数据
@@ -63,11 +76,30 @@ namespace MyFlowField
             //gridDebug.DrawFlowField();
         }
         
+
         private void FixedUpdate()
         {
             if (player.Vspeed != 0||player.Hspeed != 0)
             {
-                OverrideFlowField();
+                /*countPer++;
+                if (countPer >= 30)
+                {
+                    OverrideFlowField();
+                    
+                    countPer = 0;
+                }*/
+                
+                
+            }
+        }
+
+        IEnumerator Request()
+        {
+            while (r)
+            {
+                yield return new WaitForSeconds(0.2f);
+                PathRequest request = new PathRequest(_player.position,spawnerPoint.position,gridSize,cellRadius,GetField);
+                FieldRequestManager.FlowFieldRequest(request);
             }
         }
     }

@@ -9,6 +9,7 @@ namespace MyFlowField
         public byte cost;//本格消耗
         public ushort bestCost;//最低消耗
         public GridDirection bestDirection;//最低消耗方向
+        
 
         public Cell(Vector3 _worldPos, Vector2Int _gridIndex)
         {
@@ -29,6 +30,7 @@ namespace MyFlowField
             if (amnt + cost >= 255) { cost = byte.MaxValue; }
             else { cost += (byte)amnt; }
         }
+        
     }
 }
 
