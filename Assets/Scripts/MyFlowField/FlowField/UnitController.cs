@@ -30,6 +30,9 @@ namespace MyFlowField
     		{
     			DestroyUnits();
     		}
+            
+
+            
         }
     
     	private void FixedUpdate()
@@ -42,9 +45,8 @@ namespace MyFlowField
     			Vector3 moveDirection = new Vector3(cellBelow.bestDirection.Vector.x, cellBelow.bestDirection.Vector.y,0);
     			// position += moveDirection * (Time.fixedDeltaTime * moveSpeed);
     			// unit.transform.position = position;
-    			Rigidbody2D unitRB = unit.GetComponent<Rigidbody2D>();
-    			unitRB.velocity = moveDirection * moveSpeed;
-    		}
+                unit.GetComponent<FBoid>().FlowPath(moveDirection);
+            }
             
     	}
     

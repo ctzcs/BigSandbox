@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028305, g: 0.22571313, b: 0.3069213, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -167,7 +167,6 @@ GameObject:
   m_Component:
   - component: {fileID: 398515087}
   - component: {fileID: 398515088}
-  - component: {fileID: 398515089}
   m_Layer: 0
   m_Name: GridDebug
   m_TagString: Untagged
@@ -206,26 +205,6 @@ MonoBehaviour:
   displayGrid: 1
   spawnerPoint: {fileID: 1967377703}
   curDisplayType: 4
---- !u!95 &398515089
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 398515085}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: aedb0a0e9861947629111ec1758ba776, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
 --- !u!114 &598570720 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4084789398220893487, guid: c5bf0ec09ff06450eac30a807ab3447e,
@@ -282,8 +261,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3c9ee2c6e18445a875120a1d10ed13c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridSize: {x: 39, y: 20}
-  cellRadius: 0.25
+  gridSize: {x: 9, y: 5}
+  cellRadius: 1
   gridDebug: {fileID: 398515088}
   spawnerPoint: {fileID: 1967377703}
   player: {fileID: 598570720}
@@ -522,6 +501,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 4084789398220893475, guid: c5bf0ec09ff06450eac30a807ab3447e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 4084789398220893480, guid: c5bf0ec09ff06450eac30a807ab3447e,
         type: 3}
       propertyPath: m_Enabled
@@ -750,7 +734,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5.0269833
+  orthographic size: 5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -831,7 +815,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!108 &1645618493
 Light:
   m_ObjectHideFlags: 0

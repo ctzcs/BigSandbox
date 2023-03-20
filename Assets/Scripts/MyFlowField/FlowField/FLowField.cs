@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,12 +19,21 @@ namespace MyFlowField
 		//创建格子的起点
 		private Vector3 m_startPoint;
 
+		//检查队列
+		private Queue<Cell> _cellsToCheck;
+
+		/// <summary>
+		///获取邻居的容器，因为每帧调用这里为了节省内存
+		/// </summary>
+		private List<Cell> _neighborCells;
 		public FlowField(float _cellRadius, Vector2Int _gridSize,Vector3 _startPoint)
 		{
 			cellRadius = _cellRadius;
 			m_cellDiameter = cellRadius * 2f;
 			gridSize = _gridSize;
 			m_startPoint = _startPoint;
+			_cellsToCheck = new Queue<Cell>(16);
+			_neighborCells = new List<Cell>(16);
 		}
 		
 		
@@ -97,14 +107,14 @@ namespace MyFlowField
 			destinationCell.bestCost = 0;
 			
 			//创建一个需要检查的队列
-			Queue<Cell> cellsToCheck = new Queue<Cell>();
+			
 			//将目标入队
-			cellsToCheck.Enqueue(destinationCell);
+			_cellsToCheck.Enqueue(destinationCell);
 			//只要队列中还有元素，一直检查
-			while(cellsToCheck.Count > 0)
+			while(_cellsToCheck.Count > 0)
 			{
 				//出队，获取Cell的邻居网格
-				Cell curCell = cellsToCheck.Dequeue();
+				Cell curCell = _cellsToCheck.Dequeue();
 				List<Cell> curNeighbors = GetNeighborCells(curCell.gridIndex, GridDirection.CardinalDirections);
 				//如果邻居花费和当前细胞花费的总和小于邻居的最小消耗，那么修改最小消耗，将邻居入队
 				foreach (Cell curNeighbor in curNeighbors)
@@ -113,7 +123,7 @@ namespace MyFlowField
 					if (curNeighbor.cost + curCell.bestCost < curNeighbor.bestCost)
 					{
 						curNeighbor.bestCost = (ushort)(curNeighbor.cost + curCell.bestCost);
-						cellsToCheck.Enqueue(curNeighbor);
+						_cellsToCheck.Enqueue(curNeighbor);
 					}
 				}
 			}
@@ -148,17 +158,17 @@ namespace MyFlowField
 		/// <returns></returns>
 		private List<Cell> GetNeighborCells(Vector2Int nodeIndex, List<GridDirection> directions)
 		{
-			List<Cell> neighborCells = new List<Cell>();
-
+			//每次清空容器
+			_neighborCells.Clear();
 			foreach (Vector2Int curDirection in directions)
 			{
 				Cell newNeighbor = GetCellAtRelativePos(nodeIndex, curDirection);
 				if (newNeighbor != null)
 				{
-					neighborCells.Add(newNeighbor);
+					_neighborCells.Add(newNeighbor);
 				}
 			}
-			return neighborCells;
+			return _neighborCells;
 		}
 		
 		/// <summary>

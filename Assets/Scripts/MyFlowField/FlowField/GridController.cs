@@ -19,6 +19,8 @@ namespace MyFlowField
         public Transform spawnerPoint;
         //关注的player相当于关注的目标点
         public Player player;
+
+        private Transform _player;
         //现在的格子
         private Cell nowCell;
         
@@ -26,6 +28,7 @@ namespace MyFlowField
 
         private void Start()
         {
+            _player = player.transform;
             InitializeFlowField();
             curFlowField.CreateCostField();
             OverrideFlowField();
@@ -49,7 +52,7 @@ namespace MyFlowField
             // Vector3 mousePos = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0f);
             // Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePos);
             //从鼠标转换到player坐标来绘制
-            Cell destinationCell = curFlowField.GetCellFromWorldPos(player.transform.position);
+            Cell destinationCell = curFlowField.GetCellFromWorldPos(_player.position);
             if (nowCell == destinationCell)
             {
                 return;
@@ -57,7 +60,7 @@ namespace MyFlowField
             nowCell = destinationCell;
             curFlowField.CreateIntegrationField(destinationCell);
             curFlowField.CreateFlowField();
-            gridDebug.DrawFlowField();
+            //gridDebug.DrawFlowField();
         }
         
         private void FixedUpdate()
@@ -66,8 +69,6 @@ namespace MyFlowField
             {
                 OverrideFlowField();
             }
-
-            
         }
     }
 

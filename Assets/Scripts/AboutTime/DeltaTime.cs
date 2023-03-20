@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace AboutTime
@@ -7,10 +8,18 @@ namespace AboutTime
         // Start is called before the first frame update
         private float elapseTime;
         private float fixedTime;
+        private float accelarateFixedTime;
         void Start()
         {
             Application.targetFrameRate = 120;
             fixedTime = Time.fixedDeltaTime;
+        }
+
+        private void FixedUpdate()
+        {
+            print("fixedTime：" + accelarateFixedTime );
+            print("nowTime:" + Time.time);
+            accelarateFixedTime += Time.fixedDeltaTime;
         }
 
         void Update()
@@ -21,13 +30,13 @@ namespace AboutTime
                 FakeUpdate();
                 elapseTime -= fixedTime;
             }
+            print("delta" + Time.deltaTime);
             elapseTime += Time.deltaTime;
-            print("delta"+Time.deltaTime);
         }
 
         void FakeUpdate()
         {
-            print("Time:" + Time.time);
+            print("InternalUpdate:" + Time.time);
         }
     } 
 }

@@ -1,7 +1,7 @@
+
 namespace MyFlowField
 {
     using System.Collections.Generic;
-    using System.Linq;
     using UnityEngine;
     
     public class GridDirection
@@ -20,7 +20,15 @@ namespace MyFlowField
     
         public static GridDirection GetDirectionFromV2I(Vector2Int vector)
         {
-            return CardinalAndIntercardinalDirections.DefaultIfEmpty(None).FirstOrDefault(direction => direction == vector);
+            for (int i = 0; i < AllDirections.Count; i++)
+            {
+                if (AllDirections[i].Vector == vector)
+                {
+                    return AllDirections[i];
+                }
+            }
+
+            return null;
         }
     
         public static readonly GridDirection None = new GridDirection(0, 0);

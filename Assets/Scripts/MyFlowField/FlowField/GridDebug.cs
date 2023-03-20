@@ -144,7 +144,9 @@ public class GridDebug : MonoBehaviour
 			GameObject.Destroy(t.gameObject);
 		}
 	}
+#if UNITY_EDITOR
 	
+
 	private void OnDrawGizmos()
 	{
 		if (displayGrid)
@@ -207,6 +209,7 @@ public class GridDebug : MonoBehaviour
 		}
 		
 	}
+#endif
 }
 
 }
