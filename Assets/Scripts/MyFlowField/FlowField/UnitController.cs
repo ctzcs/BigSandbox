@@ -17,7 +17,7 @@ namespace MyFlowField
     	private void Awake()
     	{
     		unitsInGame = new List<GameObject>();
-            Application.targetFrameRate = 120;
+            
         }
     
     	void Update()

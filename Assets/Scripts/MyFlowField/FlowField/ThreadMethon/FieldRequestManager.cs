@@ -45,8 +45,9 @@ namespace MyFlowField
         {
             Task t = Task.Run(() =>
             {
+                //这里可以使用静态方法，也可以通过实例去调用方法
                 _instance._flowField.FindPath(request, _instance.FinishFindingPath);
-                Debug.Log(Thread.CurrentThread.ManagedThreadId);
+                /*FlowField.FindPath(request, _instance.FinishFindingPath);*/
             });
 
             /*ThreadPool.QueueUserWorkItem((obj) =>
