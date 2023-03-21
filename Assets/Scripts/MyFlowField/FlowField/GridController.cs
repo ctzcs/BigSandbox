@@ -22,23 +22,23 @@ namespace MyFlowField
 
         private Transform _player;
         //现在的格子
-        private Cell nowCell;
-        private int countPer = 0;
-        private bool r;
+        private Cell _nowCell;
+        private bool _r;
 
         private void Start()
         {
             _player = player.transform;
             //方式一：同一线程的方法
-            InitializeFlowField();
+            /*InitializeFlowField();
             curFlowField.CreateCostField();
-            OverrideFlowField();
+            OverrideFlowField();*/
             
             //方式二：多线程方法，通过携程隔一段时间调用一次
-            /*PathRequest request = new PathRequest(_player.position,spawnerPoint.position,gridSize,cellRadius,GetField);
+            PathRequest request = new PathRequest(_player.position,spawnerPoint.position,gridSize,cellRadius,GetField);
             FieldRequestManager.FlowFieldRequest(request);
-            */
-            r = true;
+            
+            
+            _r = true;
             StartCoroutine("ThreadRequest");
         }
 
@@ -68,14 +68,17 @@ namespace MyFlowField
         {
             //从鼠标转换到player坐标来绘制
             Cell destinationCell = curFlowField.GetCellFromWorldPos(_player.position);
-            if (nowCell == destinationCell)
+            if (_nowCell == destinationCell)
             {
                 return;
             }
-            nowCell = destinationCell;
+            _nowCell = destinationCell;
             curFlowField.CreateIntegrationField(destinationCell);
             curFlowField.CreateFlowField();
+#if UNITY_EDITOR
             gridDebug.DrawFlowField();
+#endif
+            
         }
         
 
@@ -101,9 +104,9 @@ namespace MyFlowField
         /// <returns></returns>
         IEnumerator ThreadRequest()
         {
-            while (r)
+            while (_r)
             {
-                yield return new WaitForSeconds(0.2f);
+                yield return new WaitForSeconds(0.5f);
                 //方式一
                 /*OverrideFlowField();*/
                 

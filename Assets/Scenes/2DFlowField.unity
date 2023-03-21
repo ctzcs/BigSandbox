@@ -722,7 +722,7 @@ MonoBehaviour:
   unitPrefab: {fileID: 9039393314575161713, guid: a58a28902a2fb44239f9b66fc8b93bbb,
     type: 3}
   spawnerPoint: {fileID: 1967377703}
-  numUnitsPerSpawn: 50
+  numUnitsPerSpawn: 10
   moveSpeed: 0.5
 --- !u!1 &1392504442
 GameObject:

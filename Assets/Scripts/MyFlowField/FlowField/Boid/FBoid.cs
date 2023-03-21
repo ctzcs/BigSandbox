@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Numerics;
 using Boids;
 using UnityEngine;
+using UnityEngine.Serialization;
+using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
 namespace MyFlowField
@@ -12,7 +14,7 @@ namespace MyFlowField
         private FBoidData _boidData;
         private List<FBoid> _boidsNeighbor;
         private List<FBoid> _boidsCollRisk;
-        private Transform _transform;
+        [FormerlySerializedAs("_transform")] public Transform fbTransform;
         private Rigidbody2D _rb;
         private Vector3 _nowForward;
         private Vector3 _nextForward;
@@ -40,9 +42,9 @@ namespace MyFlowField
         // Start is called before the first frame update
         void Start()
         {
-            _transform = this.transform;
+            fbTransform = this.transform;
             _rb = GetComponent<Rigidbody2D>();
-            _boidData = new FBoidData(4, 45, 3);
+            _boidData = new FBoidData(4, 135, 1);
             _boidsNeighbor = new List<FBoid>();
             _boidsCollRisk = new List<FBoid>();
             _player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -105,34 +107,39 @@ namespace MyFlowField
 
             for (int i = _boidsCollRisk.Count-1; i >= 0; i--)
             {
-                if (IsCollRisk(_boidsCollRisk[i].transform.position))
+                if (IsCollRisk(_boidsCollRisk[i].fbTransform.position))
                 {
                     continue;
                 }
                 _boidsCollRisk.Remove(_boidsCollRisk[i]);
             }
 
-            if (_boidsCollRisk.Count > 1)
+            if (_boidsCollRisk.Count > 0)
             {
-                _separationFactor = 2;
-                _aggregationFactor = 0;
+                _separationFactor = 5;
+                _aggregationFactor = 1;
+                _convergenceFactor = 1;
             }
             else
             {
-                _separationFactor = 0f;
-                _aggregationFactor = 1;
+                _separationFactor = 1f;
+                _aggregationFactor = 5;
+                _convergenceFactor = 1;
             }
         }
 
+        /// <summary>
+        ///检查玩家是否在区域内
+        /// </summary>
         void CheckPlayer()
         {
-            if (Vector3.Distance(_player.position,_transform.position) > 5)
+            if (Vector3.Distance(_player.position,fbTransform.position) > 8)
             {
-                _findPathFactor = 3;
+                _findPathFactor = 20f;
             }
             else
             {
-                _findPathFactor = 1f;
+                _findPathFactor = 5f;
             }
         }
         /// <summary>
@@ -143,7 +150,7 @@ namespace MyFlowField
         bool IsValidNeighbor(Vector3 pos)
         {
             var v = pos - _nowForward;
-            if (v.y > 0 && Vector3.Angle(_nowForward,v) <= _boidData.DetectionAngle)
+            if (Vector3.Angle(_nowForward,v) <= _boidData.DetectionAngle)
             {
                 return true;
             }
@@ -153,7 +160,7 @@ namespace MyFlowField
 
         bool IsCollRisk(Vector3 pos)
         {
-            if (Vector3.Distance(pos,_transform.position) <= _boidData.RiskDistance )
+            if (Vector3.Distance(pos,fbTransform.position) <= _boidData.RiskDistance )
             {
                 return true;
             }
@@ -168,10 +175,20 @@ namespace MyFlowField
         {
             Vector3 targetVelocity;
             
-            var position = _transform.position;
+            var position = fbTransform.position;
+            
+           
+            
             Vector3 aggregateVelocity = GetAveragePosition(_boidsNeighbor) - position; //让东西趋近平均点
             var averageVelocity = GetAverageVelocity(_boidsNeighbor);//让东西趋近于平均速度
             var riskCollVelocity = position - GetAveragePosition(_boidsCollRisk);//让东西原理平均点
+            
+            /*//假设位置
+            var averagePosition = GetAveragePosition(_boidsNeighbor);
+            Vector3 aggregateVelocity = averagePosition- position; //让东西趋近平均点
+           var averageVelocity = GetAverageVelocity(_boidsNeighbor);//让东西趋近于平均速度
+           var riskCollVelocity = -aggregateVelocity;//让东西原理平均点*/
+            
             targetVelocity = aggregateVelocity.normalized*_aggregationFactor + averageVelocity.normalized * _convergenceFactor + riskCollVelocity.normalized * _separationFactor + _fieldPath.normalized*_findPathFactor;
             _nextForward = targetVelocity.normalized;
         }
@@ -181,7 +198,7 @@ namespace MyFlowField
         {
             Vector3 sum = Vector3.zero;
             foreach (FBoid b in someBoids)
-                sum += b.transform.position;
+                sum += b.fbTransform.position;
             Vector3 center = sum / someBoids.Count;
             return (center);
         }

@@ -145,8 +145,6 @@ public class GridDebug : MonoBehaviour
 		}
 	}
 #if UNITY_EDITOR
-	
-
 	private void OnDrawGizmos()
 	{
 		if (displayGrid)
