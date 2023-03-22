@@ -75,9 +75,13 @@ namespace ComputeShader
 
         void Update()
         {
-            Request();
+            /*Request();*/
+            Callback();
         }
 
+        /// <summary>
+        /// 直接获取数据的方式
+        /// </summary>
         void Request0()
         {
             // 设置每一帧会变的变量
@@ -99,6 +103,9 @@ namespace ComputeShader
                 
             }
         }
+        /// <summary>
+        /// 使用等待的方式
+        /// </summary>
         void Request()
         {
             if (_boidsBuffer == null)
@@ -138,25 +145,16 @@ namespace ComputeShader
             
         }
 
-        void Request2()
+        /// <summary>
+        /// 使用回调的方式，目前最优的方式，还有的优化空间是Batch
+        /// </summary>
+        void Callback()
         {
-            // 设置每一帧会变的变量
-            shader.SetFloat("deltaTime", Time.deltaTime);
-            shader.SetVector("flockPosition", target.transform.position);
-            // 调用 Compute Shader Kernel 来计算
-            shader.Dispatch(_kernelHandle, _groupSizeX, 1, 1);
-            
-            /*// 阻塞等待 Compute Shader 计算结果从 GPU 传回来
-            _boidsBuffer.GetData(_boidsArray);*/
-            if (_boidsBuffer == null)
+            //先在外面初始化一次，然后每帧判断是否完成
+            if (_readback.done)
             {
-                return;
-            }
-            _readback = AsyncGPUReadback.Request(_boidsBuffer,_numOfBoids*6 * sizeof(float),0);
-            _readback.WaitForCompletion();
-            if (_readback.done && !_readback.hasError)
-            {
-                _readback.GetData<Boid>().CopyTo(_boidsArray);
+                //如果完成了
+                // 设置鸟的 position 和 rotation
                 for (int i = 0; i < _boidsArray.Length; i++)
                 {
                     _boids[i].transform.localPosition = _boidsArray[i].position;
@@ -165,12 +163,22 @@ namespace ComputeShader
                     {
                         _boids[i].transform.rotation = Quaternion.LookRotation(_boidsArray[i].direction);
                     }
+            
                 }
-                
+                //清空数据，填入新的请求，当完成时，将数据拷贝到数组中
+                // 设置每一帧会变的变量
+                shader.SetFloat("deltaTime", Time.deltaTime);
+                shader.SetVector("flockPosition", target.transform.position);
+                // 调用 Compute Shader Kernel 来计算
+                shader.Dispatch(_kernelHandle, _groupSizeX, 1, 1);
+                _readback = AsyncGPUReadback.Request(_boidsBuffer,_numOfBoids*6 * sizeof(float),0,(o)=>
+                {
+                    o.GetData<Boid>().CopyTo(_boidsArray);
+                });
             }
             
         }
-
+        
         
         void OnDestroy()
         {
