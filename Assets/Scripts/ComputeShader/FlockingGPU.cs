@@ -1,5 +1,8 @@
 
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering;
+
 namespace ComputeShader
 {
 
@@ -21,6 +24,8 @@ namespace ComputeShader
         private GameObject[] _boids;
         private int _groupSizeX;
         private int _numOfBoids;
+
+        private AsyncGPUReadbackRequest _readback;
 
         void Start()
         {
@@ -64,19 +69,23 @@ namespace ComputeShader
             shader.SetVector("flockPosition", target.transform.position);
             shader.SetFloat("neighbourDistance", neighbourDistance);
             shader.SetInt("boidsCount", boidsCount);
+            _readback = AsyncGPUReadback.Request(_boidsBuffer,_numOfBoids*6 * sizeof(float),0);
         }
 
         void Update()
+        {
+            Request();
+        }
+
+        void Request0()
         {
             // 设置每一帧会变的变量
             shader.SetFloat("deltaTime", Time.deltaTime);
             shader.SetVector("flockPosition", target.transform.position);
             // 调用 Compute Shader Kernel 来计算
             shader.Dispatch(_kernelHandle, _groupSizeX, 1, 1);
-
             // 阻塞等待 Compute Shader 计算结果从 GPU 传回来
             _boidsBuffer.GetData(_boidsArray);
-
             // 设置鸟的 position 和 rotation
             for (int i = 0; i < _boidsArray.Length; i++)
             {
@@ -86,7 +95,71 @@ namespace ComputeShader
                 {
                     _boids[i].transform.rotation = Quaternion.LookRotation(_boidsArray[i].direction);
                 }
+                
             }
+        }
+        void Request()
+        {
+            if (_boidsBuffer == null)
+            {
+                return;
+            }
+            //如果没有完成就等待
+            if (!_readback.done)
+            {
+                _readback.WaitForCompletion();
+            }
+            //完成了进入一个新请求
+            if (_readback.done && !_readback.hasError)
+            {
+                _readback.GetData<Boid>().CopyTo(_boidsArray);
+                // 设置鸟的 position 和 rotation
+                for (int i = 0; i < _boidsArray.Length; i++)
+                {
+                    _boids[i].transform.localPosition = _boidsArray[i].position;
+
+                    if (!_boidsArray[i].direction.Equals(Vector3.zero))
+                    {
+                        _boids[i].transform.rotation = Quaternion.LookRotation(_boidsArray[i].direction);
+                    }
+                
+                }
+                // 设置每一帧会变的变量
+                shader.SetFloat("deltaTime", Time.deltaTime);
+                shader.SetVector("flockPosition", target.transform.position);
+                // 调用 Compute Shader Kernel 来计算
+                shader.Dispatch(_kernelHandle, _groupSizeX, 1, 1);
+                /*// 阻塞等待 Compute Shader 计算结果从 GPU 传回来
+                _boidsBuffer.GetData(_boidsArray);*/
+                _readback = AsyncGPUReadback.Request(_boidsBuffer,_numOfBoids*6 * sizeof(float),0);
+            }
+            
+            
+        }
+
+
+        IEnumerator Request2()
+        {
+            // 设置每一帧会变的变量
+            shader.SetFloat("deltaTime", Time.deltaTime);
+            shader.SetVector("flockPosition", target.transform.position);
+            // 调用 Compute Shader Kernel 来计算
+            shader.Dispatch(_kernelHandle, _groupSizeX, 1, 1);
+            
+            /*// 阻塞等待 Compute Shader 计算结果从 GPU 传回来
+            _boidsBuffer.GetData(_boidsArray);*/
+            if (_boidsBuffer == null)
+            {
+                yield break;
+            }
+            _readback = AsyncGPUReadback.Request(_boidsBuffer,_numOfBoids*6 * sizeof(float),0);
+            _readback.WaitForCompletion();
+            if (_readback.done && !_readback.hasError)
+            {
+                _readback.GetData<Boid>().CopyTo(_boidsArray);
+                yield return true;
+            }
+            yield return false;
         }
 
         void OnDestroy()

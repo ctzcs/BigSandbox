@@ -157,7 +157,7 @@ MonoBehaviour:
   neighbourDistance: 1
   boidPrefab: {fileID: 3866559711115009924, guid: 218a41a6ca8c50242a57fcaa38adf4bb,
     type: 3}
-  boidsCount: 512
+  boidsCount: 256
   spawnRadius: 5
   target: {fileID: 1729188672}
 --- !u!4 &191732326
