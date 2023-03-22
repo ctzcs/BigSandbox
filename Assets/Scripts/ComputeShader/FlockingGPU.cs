@@ -69,6 +69,7 @@ namespace ComputeShader
             shader.SetVector("flockPosition", target.transform.position);
             shader.SetFloat("neighbourDistance", neighbourDistance);
             shader.SetInt("boidsCount", boidsCount);
+            //第一次请求的初始化
             _readback = AsyncGPUReadback.Request(_boidsBuffer,_numOfBoids*6 * sizeof(float),0);
         }
 
@@ -137,8 +138,7 @@ namespace ComputeShader
             
         }
 
-
-        IEnumerator Request2()
+        void Request2()
         {
             // 设置每一帧会变的变量
             shader.SetFloat("deltaTime", Time.deltaTime);
@@ -150,18 +150,28 @@ namespace ComputeShader
             _boidsBuffer.GetData(_boidsArray);*/
             if (_boidsBuffer == null)
             {
-                yield break;
+                return;
             }
             _readback = AsyncGPUReadback.Request(_boidsBuffer,_numOfBoids*6 * sizeof(float),0);
             _readback.WaitForCompletion();
             if (_readback.done && !_readback.hasError)
             {
                 _readback.GetData<Boid>().CopyTo(_boidsArray);
-                yield return true;
+                for (int i = 0; i < _boidsArray.Length; i++)
+                {
+                    _boids[i].transform.localPosition = _boidsArray[i].position;
+
+                    if (!_boidsArray[i].direction.Equals(Vector3.zero))
+                    {
+                        _boids[i].transform.rotation = Quaternion.LookRotation(_boidsArray[i].direction);
+                    }
+                }
+                
             }
-            yield return false;
+            
         }
 
+        
         void OnDestroy()
         {
             if (_boidsBuffer != null)
