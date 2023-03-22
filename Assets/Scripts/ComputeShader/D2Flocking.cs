@@ -1,13 +1,12 @@
-
-using System;
-using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Random = UnityEngine.Random;
 
 namespace ComputeShader
 {
-    public class FlockingGPU : MonoBehaviour
+    
+    public class D2Flocking : MonoBehaviour
     {
         public UnityEngine.ComputeShader shader;
 
@@ -17,18 +16,22 @@ namespace ComputeShader
         public int boidsCount;
         public float spawnRadius;
         public Transform target;
-
+        
+        
         private int _kernelHandle;
         private ComputeBuffer _boidsBuffer;
         private Boid[] _boidsArray;
         private GameObject[] _boids;
         private int _groupSizeX;
         private int _numOfBoids;
+        private Queue<Boid[]> _queue;
 
         private AsyncGPUReadbackRequest _readback;
 
         void Start()
         {
+            //新建接受数据的队列
+            _queue = new Queue<Boid[]>();
             _kernelHandle = shader.FindKernel("CSMain");
 
             uint x;
@@ -51,6 +54,7 @@ namespace ComputeShader
             for (int i = 0; i < _numOfBoids; i++)
             {
                 Vector3 pos = transform.position + Random.insideUnitSphere * spawnRadius;
+                pos.z = 0;
                 _boidsArray[i] = new Boid(pos);
                 _boids[i] = Instantiate(boidPrefab, pos, Quaternion.identity);
                 _boidsArray[i].direction = _boids[i].transform.forward;
@@ -159,10 +163,10 @@ namespace ComputeShader
                 {
                     _boids[i].transform.localPosition = _boidsArray[i].position;
 
-                    if (!_boidsArray[i].direction.Equals(Vector3.zero))
+                    /*if (!_boidsArray[i].direction.Equals(Vector3.zero))
                     {
                         _boids[i].transform.rotation = Quaternion.LookRotation(_boidsArray[i].direction);
-                    }
+                    }*/
             
                 }
                 //清空数据，填入新的请求，当完成时，将数据拷贝到数组中
@@ -187,23 +191,6 @@ namespace ComputeShader
                 // 用完主动释放 buffer
                 _boidsBuffer.Dispose();
             }
-        }
-    }
-
-
-    public struct Boid
-    {
-        public Vector3 position;
-        public Vector3 direction;
-
-        public Boid(Vector3 pos)
-        {
-            position.x = pos.x;
-            position.y = pos.y;
-            position.z = pos.z;
-            direction.x = 0;
-            direction.y = 0;
-            direction.z = 0;
         }
     }
 }
