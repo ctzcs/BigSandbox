@@ -189,11 +189,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 7200000, guid: ceb05f6b46aad304e9f86ac44ec0275b, type: 3}
-  boidSpeed: 2
-  neighbourDistance: 2
+  boidSpeed: 1
+  neighbourDistance: 1
   boidPrefab: {fileID: 4282602055831029755, guid: 61819b66399e147d9aae5af4a711098a,
     type: 3}
-  boidsCount: 128
+  boidsCount: 100
   spawnRadius: 5
   target: {fileID: 1729188672}
 --- !u!1 &277472152
@@ -427,6 +427,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 4084789398220893475, guid: c5bf0ec09ff06450eac30a807ab3447e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 4084789398220893486, guid: c5bf0ec09ff06450eac30a807ab3447e,
         type: 3}
       propertyPath: m_RootOrder
@@ -537,7 +542,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 10
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0

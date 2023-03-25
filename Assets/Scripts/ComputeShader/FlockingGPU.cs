@@ -1,6 +1,3 @@
-
-using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Random = UnityEngine.Random;
@@ -178,8 +175,17 @@ namespace ComputeShader
             }
             
         }
-        
-        
+
+        /*void GetBoids()
+        {
+            for (int i = 0; i < _numOfBoids; i++)
+            {
+                Vector3 pos = transform.position + Random.insideUnitSphere * spawnRadius;
+                _boidsArray[i] = new Boid(pos);
+                _boids[i] = Instantiate(boidPrefab, pos, Quaternion.identity);
+                _boidsArray[i].direction = _boids[i].transform.forward;
+            }
+        }*/
         void OnDestroy()
         {
             if (_boidsBuffer != null)
