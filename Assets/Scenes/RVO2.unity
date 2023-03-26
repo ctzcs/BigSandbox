@@ -269,6 +269,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agentPrefab: {fileID: 8237116694858114994, guid: 57ab6de7f3492074394e35c7230fff9f,
     type: 3}
+  num: 10
 --- !u!4 &1180463345
 Transform:
   m_ObjectHideFlags: 0

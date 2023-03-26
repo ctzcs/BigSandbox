@@ -44,10 +44,10 @@ namespace MyFlowField
     			var position = unit.transform.position;
                 Cell cellBelow = gridController.curFlowField.GetCellFromWorldPos(position);
     			Vector3 moveDirection = new Vector3(cellBelow.bestDirection.Vector.x, cellBelow.bestDirection.Vector.y,0);
-    			// position += moveDirection * (Time.fixedDeltaTime * moveSpeed);
-    			// unit.transform.position = position;
-                /*unit.GetComponent<Rigidbody2D>().velocity = moveSpeed * moveDirection;*/
-                unit.GetComponent<FBoid>().FlowPath(moveDirection);
+    			/*position += moveDirection * (Time.fixedDeltaTime * moveSpeed);
+    			unit.transform.position = position;*/
+                unit.GetComponent<Rigidbody2D>().velocity = moveSpeed * moveDirection;
+                /*unit.GetComponent<FBoid>().FlowPath(moveDirection);*/
             }
             
     	}

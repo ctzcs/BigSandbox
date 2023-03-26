@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4526187168935610193}
   - component: {fileID: 3325169674897718194}
   - component: {fileID: 6978213606711668826}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: View
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 7938403116179853255}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 9039393314575161719}
@@ -119,9 +119,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.027187085}
+  m_Offset: {x: 0, y: 0.050599948}
   serializedVersion: 2
-  m_Radius: 0.027186954
+  m_Radius: 0.050583884
 --- !u!1 &9039393314575161713
 GameObject:
   m_ObjectHideFlags: 0
@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: -2975581747833281213}
   - component: {fileID: 5717016174907898699}
   - component: {fileID: -2570761585344430609}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Cat
   m_TagString: Monster
   m_Icon: {fileID: 0}
@@ -201,7 +201,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9039393314575161713}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 910fe5646ee603a4193dc7dd45e614cf, type: 3}
   m_Name: 

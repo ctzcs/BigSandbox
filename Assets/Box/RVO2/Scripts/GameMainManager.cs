@@ -11,7 +11,7 @@ using Vector2 = RVO.Vector2;
 public class GameMainManager : SingletonBehaviour<GameMainManager>
 {
     public GameObject agentPrefab;
-
+    public int num;
     [HideInInspector] public Vector2 mousePosition;
 
     private Plane m_hPlane = new Plane(-Vector3.forward, Vector3.zero);
@@ -28,7 +28,7 @@ public class GameMainManager : SingletonBehaviour<GameMainManager>
         float timeHorizon = 5.0f; //预测提前规避时间, 提前得越多，速度变化越频繁
         float timeHorizonObst = 5.0f; //预测提前规避时间(针对固定障碍), 提前得越多，速度变化越频繁
         float radius = .25f;//阻挡半径
-        float maxSpeed = 2.0f;//所能达到得最大速度
+        float maxSpeed = 0.1f;//所能达到得最大速度
         Vector2 velocity = new Vector2(0.0f, 0.0f);//初始的 2元线性速度，影响出生单位时排挤其他的速度
         Simulator.Instance.setAgentDefaults(neighborDist, maxNeighbors, timeHorizon, timeHorizonObst,
             radius, maxSpeed, velocity);
@@ -62,17 +62,21 @@ public class GameMainManager : SingletonBehaviour<GameMainManager>
         m_agentMap.Remove(agentNo);
     }
 
-    void CreatAgent()
+    void CreatAgent(int num)
     {
-        int sid = Simulator.Instance.addAgent(mousePosition);
-        if (sid >= 0)
+        for (int i = 0; i < num; i++)
         {
-            GameObject go = LeanPool.Spawn(agentPrefab, new Vector3(mousePosition.x(), 0, mousePosition.y()), Quaternion.identity);
-            GameAgent ga = go.GetComponent<GameAgent>();
-            Assert.IsNotNull(ga);
-            ga.sid = sid;
-            m_agentMap.Add(sid, ga);
+            int sid = Simulator.Instance.addAgent(mousePosition);
+            if (sid >= 0)
+            {
+                GameObject go = LeanPool.Spawn(agentPrefab, new Vector3(mousePosition.x(), 0, mousePosition.y()), Quaternion.identity);
+                GameAgent ga = go.GetComponent<GameAgent>();
+                Assert.IsNotNull(ga);
+                ga.sid = sid;
+                m_agentMap.Add(sid, ga);
+            }
         }
+        
     }
 
     // Update is called once per frame
@@ -87,7 +91,7 @@ public class GameMainManager : SingletonBehaviour<GameMainManager>
             }
             else
             {
-                CreatAgent();
+                CreatAgent(num);
             }
         }
 

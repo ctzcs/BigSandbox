@@ -25,9 +25,9 @@ public class GameAgent : MonoBehaviour
             Vector2 pos = Simulator.Instance.getAgentPosition(sid);
             Vector2 vel = Simulator.Instance.getAgentPrefVelocity(sid);
             transform.position = new Vector3(pos.x(),pos.y(), transform.position.z);
-            if (Math.Abs(vel.x()) > 0.01f && Math.Abs(vel.y()) > 0.01f)
+            /*if (Math.Abs(vel.x()) > 0.01f && Math.Abs(vel.y()) > 0.01f)
                 //以Y轴为移动朝向
-                transform.up = new Vector3(vel.x(),vel.y(), 0 ).normalized;
+                transform.up = new Vector3(vel.x(),vel.y(), 0 ).normalized;*/
         }
 
         ////如果没有按下右键的话, 就不给予速度向量

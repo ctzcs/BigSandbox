@@ -69,7 +69,7 @@ namespace MyFlowField
         }
         
 
-        private void OnTriggerEnter2D(Collider2D other)
+        /*private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.CompareTag("Monster"))
             {
@@ -93,7 +93,7 @@ namespace MyFlowField
             {
                 _boidsNeighbor.Remove(b);
             }
-        }
+        }*/
 
         /// <summary>
         /// 检查是否还有Risk
