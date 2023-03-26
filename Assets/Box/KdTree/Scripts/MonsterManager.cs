@@ -6,6 +6,7 @@ using DataStructures.ViliWonka.KDTree;
 using MyFlowField;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using Random = UnityEngine.Random;
 
 namespace KdTree
@@ -49,12 +50,12 @@ namespace KdTree
             //生成怪物列表
             _monsterList = new List<Transform>(_pointCloud.Length);
             
-            for (int i = 0; i < 10 ; i++)
+            for (int i = 0; i < 60 ; i++)
             {
                 Debug.Log("生成");
                 var obj = Instantiate(prefab);
                 var t = obj.transform;
-                t.position = new Vector3(Random.Range(rangeMin.x, rangeMax.x), 0, Random.Range(rangeMin.z, rangeMax.z));
+                t.position = new Vector3(Random.Range(rangeMin.x, rangeMax.x), 1, Random.Range(rangeMin.z, rangeMax.z));
                 AddToTree(t);
             }
             
@@ -84,9 +85,11 @@ namespace KdTree
             _monsterTree.Rebuild();
         }
 
-        public void RemoveFromTree(Entity monster)
+        public void RemoveFromTree(Transform target)
         {
-            
+            _monsterCount--;
+            _monsterList.Remove(target);
+            UpdateMonsterTree();
         }
         
 
@@ -95,38 +98,26 @@ namespace KdTree
             _results.Clear();
             KDQuery query = new KDQuery();
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            Physics.Raycast(ray, out RaycastHit hitInfo);
-            if (hitInfo.transform != null)
+            Physics.Raycast(ray, out RaycastHit hitInfo,1000);
+            if (hitInfo.transform == null)
             {
-                var pos = new Vector3(hitInfo.point.x,0, hitInfo.point.z);
-                query.Radius(_monsterTree,pos,5,_results);
+                return;
             }
+
+            var pos = new Vector3(hitInfo.point.x, 0, hitInfo.point.z);
+            query.Radius(_monsterTree,pos,2,_results);
+            
             for (int i = 0; i < _results.Count; i++)
             {
-                Debug.Log(_results[i]);
-                if (_monsterList[_results[i]].TryGetComponent(out MeshRenderer m))
+                if (_monsterList[_results[i]].TryGetComponent(out Entity e))
                 {
-                    ChangeColor(m,0.5f);
+                    //改变颜色0.5s
+                    e.ChangeColor(0.5f);
                 }
             }
         }
 
-        void ChangeColor(MeshRenderer m, float delay)
-        {
-            var mat = m.material;
-            if (mat.color == Color.red)
-            {
-                return;
-            }
-            StartCoroutine(IEChangeColor(mat, delay));
-        }
-        IEnumerator IEChangeColor(Material m,float delay)
-        {
-            var c = m.color;
-            m.color = Color.red;
-            yield return new WaitForSeconds(delay);
-            m.color = c;
-        }
+        
 
         private void Update()
         {
@@ -139,7 +130,9 @@ namespace KdTree
             {
                 var obj = Instantiate(prefab);
                 var t = obj.transform;
-                t.position = new Vector3(Random.Range(rangeMin.x, rangeMax.x), 0, Random.Range(rangeMin.z, rangeMax.z));
+                var mousePos = Input.mousePosition;
+                mousePos.z = 20;
+                t.position = Camera.main.ScreenToWorldPoint(mousePos);
                 AddToTree(t);
             }
         }
