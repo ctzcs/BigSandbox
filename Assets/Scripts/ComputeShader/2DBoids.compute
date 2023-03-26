@@ -29,7 +29,11 @@ void CSMain(uint3 id : SV_DispatchThreadID)
         if (i == id.x)
             continue;
         Boid tempBoid = boidsBuffer[i];
-
+        if (tempBoid.position.x == -1000)
+        {
+            continue;
+        }
+        
         float3 tempBoid_position = tempBoid.position;
         float3 offset = boid.position - tempBoid_position;
         float dist = max(length(offset), 0.000001); // 防止 offset 为 0，下面做除法分母

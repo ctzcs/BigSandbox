@@ -9,7 +9,7 @@ namespace ComputeShader
         public UnityEngine.ComputeShader shader;
 
         public float boidSpeed = 1f;
-        public float neighbourDistance = 1f;
+        public float neighbourDistance = 1.5f;
         public GameObject boidPrefab;
         public int boidsCount;
         public float spawnRadius;
@@ -156,10 +156,10 @@ namespace ComputeShader
                 {
                     _boids[i].transform.localPosition = _boidsArray[i].position;
 
-                    if (!_boidsArray[i].direction.Equals(Vector3.zero))
+                    /*if (!_boidsArray[i].direction.Equals(Vector3.zero))
                     {
                         _boids[i].transform.rotation = Quaternion.LookRotation(_boidsArray[i].direction);
-                    }
+                    }*/
             
                 }
                 //清空数据，填入新的请求，当完成时，将数据拷贝到数组中

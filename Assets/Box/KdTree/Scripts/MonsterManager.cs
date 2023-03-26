@@ -135,6 +135,7 @@ namespace KdTree
                 t.position = Camera.main.ScreenToWorldPoint(mousePos);
                 AddToTree(t);
             }
+            UpdateMonsterTree();
         }
     }
 

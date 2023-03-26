@@ -189,13 +189,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 7200000, guid: ceb05f6b46aad304e9f86ac44ec0275b, type: 3}
-  boidSpeed: 1
-  neighbourDistance: 1
+  boidSpeed: 2
+  neighbourDistance: 2
   boidPrefab: {fileID: 4282602055831029755, guid: 61819b66399e147d9aae5af4a711098a,
     type: 3}
-  boidsCount: 100
+  boidsCount: 512
   spawnRadius: 5
   target: {fileID: 1729188672}
+  initCount: 512
 --- !u!1 &277472152
 GameObject:
   m_ObjectHideFlags: 0
@@ -530,7 +531,7 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1729188671}
   m_PrefabAsset: {fileID: 0}
---- !u!50 &1729188678
+--- !u!50 &1729188684
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -542,7 +543,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 10
+  m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
@@ -605,7 +606,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 8
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
