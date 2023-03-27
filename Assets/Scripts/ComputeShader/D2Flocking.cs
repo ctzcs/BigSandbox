@@ -28,7 +28,7 @@ namespace ComputeShader
         private ComputeBuffer _boidsBuffer;
         private Boid[] _boidsArray;
         /*private GameObject[] _boids;*/
-        private int _groupSizeX;
+        private int _groupSizeX;//这个值应该填的是Compute Shader中的groupSize
         public int initCount;
         private int _numOfBoids = 0;
         
@@ -47,7 +47,7 @@ namespace ComputeShader
             /*_groupSizeX = Mathf.CeilToInt(boidsCount / (float)x);*/
             // 塞满每个线程组，免得 Compute Shader 中有线程读不到数据，造成读取数据越界
             /*_numOfBoids = _groupSizeX * (int)x;*/
-            _groupSizeX = _bufferLength;
+            _groupSizeX = 256;
 
             InitBoids();
             InitShader();

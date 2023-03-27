@@ -193,11 +193,11 @@ MonoBehaviour:
   neighbourDistance: 1.5
   boidPrefab: {fileID: 4282602055831029755, guid: 61819b66399e147d9aae5af4a711098a,
     type: 3}
-  boidsCount: 512
+  boidsCount: 1024
   spawnRadius: 5
   target: {fileID: 1729188672}
   _bufferLength: 1024
-  initCount: 512
+  initCount: 1024
 --- !u!1 &277472152
 GameObject:
   m_ObjectHideFlags: 0
