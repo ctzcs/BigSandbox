@@ -12,6 +12,7 @@ namespace ComputeShader
 
     public class D2Flocking : MonoBehaviour
     {
+        [SerializeField]
         public UnityEngine.ComputeShader shader;
 
         public float boidSpeed = 1f;
@@ -22,7 +23,7 @@ namespace ComputeShader
         public Transform target;
 
 
-        private int _bufferLength = 1024;
+        public int _bufferLength = 128;
         private int _kernelHandle;
         private ComputeBuffer _boidsBuffer;
         private Boid[] _boidsArray;
@@ -106,8 +107,8 @@ namespace ComputeShader
             shader.SetVector("flockPosition", target.transform.position);
             shader.SetFloat("neighbourDistance", neighbourDistance);
             shader.SetInt("boidsCount", boidsCount);
-            //第一次请求的初始化
-            _readback = AsyncGPUReadback.Request(_boidsBuffer, _numOfBoids * 6 * sizeof(float), 0);
+            //第一次请求的初始化,注意这里的buffer大小是buffer的长度
+            _readback = AsyncGPUReadback.Request(_boidsBuffer, _bufferLength * 6 * sizeof(float), 0);
         }
 
         private RaycastHit2D[] _results = new RaycastHit2D[10];

@@ -1,5 +1,5 @@
 #pragma kernel CSMain
-#define GROUP_SIZE 128
+#define GROUP_SIZE 256
 // Compute Shader 也定义好相关的结构
 struct Boid
 {
