@@ -17,6 +17,31 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3325169674897718194, guid: a58a28902a2fb44239f9b66fc8b93bbb,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3325169674897718194, guid: a58a28902a2fb44239f9b66fc8b93bbb,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4832448077196744587, guid: a58a28902a2fb44239f9b66fc8b93bbb,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4832448077196744587, guid: a58a28902a2fb44239f9b66fc8b93bbb,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4832448077196744587, guid: a58a28902a2fb44239f9b66fc8b93bbb,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 5717016174907898699, guid: a58a28902a2fb44239f9b66fc8b93bbb,
         type: 3}
       propertyPath: m_Enabled
@@ -30,7 +55,12 @@ PrefabInstance:
     - target: {fileID: 6978213606711668826, guid: a58a28902a2fb44239f9b66fc8b93bbb,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7938403116179853255, guid: a58a28902a2fb44239f9b66fc8b93bbb,
+        type: 3}
+      propertyPath: m_TagString
+      value: Monster
       objectReference: {fileID: 0}
     - target: {fileID: 9039393314575161713, guid: a58a28902a2fb44239f9b66fc8b93bbb,
         type: 3}

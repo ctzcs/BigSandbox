@@ -9,14 +9,16 @@ struct Boid
 // RWStructuredBuffer 是可读写流
 RWStructuredBuffer<Boid> boidsBuffer;
 
+
 float deltaTime;
 float boidSpeed;
 float3 flockPosition;
 float neighbourDistance;
 int boidsCount;
 
+
 [numthreads(GROUP_SIZE,1,1)]
-void CSMain(uint3 id : SV_DispatchThreadID)
+void CSMain(uint3 id : SV_GroupThreadID)
 {
     Boid boid = boidsBuffer[id.x];
     float3 separation = 0;

@@ -12,6 +12,11 @@ PrefabInstance:
       propertyPath: m_Simulated
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3325169674897718194, guid: a58a28902a2fb44239f9b66fc8b93bbb,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: cf54b59ea68c84c45baea989e932ea85, type: 2}
     - target: {fileID: 4526187168935610193, guid: a58a28902a2fb44239f9b66fc8b93bbb,
         type: 3}
       propertyPath: m_SortingOrder

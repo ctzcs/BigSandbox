@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3957943545165633376
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3957943545165633378}
+  - component: {fileID: 3957943545165633377}
+  - component: {fileID: 3957943545165633379}
+  m_Layer: 0
+  m_Name: GPU_Compute
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3957943545165633378
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3957943545165633376}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3957943545165633377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3957943545165633376}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92fc4e0b9ebab4982b78f3d0ddbb5511, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shader: {fileID: 7200000, guid: 33d0939cb0e974bfb9bf168857a7aaca, type: 3}
+  boidSpeed: 1
+  neighbourDistance: 1
+  boidPrefab: {fileID: 4897154330954936832, guid: 71a52d97b4096e44398c1395577c508d,
+    type: 3}
+  boidsCount: 256
+  spawnRadius: 10
+  target: {fileID: 0}
+--- !u!114 &3957943545165633379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3957943545165633376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef46e0d55a7a1624bbb47525c323a846, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shader: {fileID: 7200000, guid: ceb05f6b46aad304e9f86ac44ec0275b, type: 3}
+  boidSpeed: 2
+  neighbourDistance: 2
+  boidPrefab: {fileID: 4282602055831029755, guid: 61819b66399e147d9aae5af4a711098a,
+    type: 3}
+  boidsCount: 256
+  spawnRadius: 5
+  target: {fileID: 0}
+  _bufferLength: 256
+  initCount: 256
