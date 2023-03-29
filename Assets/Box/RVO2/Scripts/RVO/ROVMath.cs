@@ -35,18 +35,18 @@ using System;
 namespace RVO
 {
     /**
-     * <summary>Contains functions and constants used in multiple classes.
+     * <summary>包含多个类中使用的函数和常量
      * </summary>
      */
     public struct RVOMath
     {
         /**
-         * <summary>A sufficiently small positive number.</summary>
+         * <summary>一个足够小的正数</summary>
          */
         internal const float RVO_EPSILON = 0.00001f;
 
         /**
-         * <summary>Computes the length of a specified two-dimensional vector.
+         * <summary>计算指定二维向量的长度
          * </summary>
          *
          * <param name="vector">The two-dimensional vector whose length is to be

@@ -32,4 +32,11 @@ public class Player : MonoBehaviour
         
     }
 
+    private void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.gameObject.CompareTag("Monster"))
+        {
+            col.transform.position -= (col.transform.position - this.transform.position)*10;
+        }
+    }
 }

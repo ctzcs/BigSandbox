@@ -203,12 +203,12 @@ PrefabInstance:
     - target: {fileID: 3957943545165633379, guid: cec87b431b457a7408e712124420664f,
         type: 3}
       propertyPath: initCount
-      value: 256
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 3957943545165633379, guid: cec87b431b457a7408e712124420664f,
         type: 3}
       propertyPath: boidsCount
-      value: 256
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 3957943545165633379, guid: cec87b431b457a7408e712124420664f,
         type: 3}
@@ -253,12 +253,12 @@ PrefabInstance:
     - target: {fileID: 3957943545165633379, guid: cec87b431b457a7408e712124420664f,
         type: 3}
       propertyPath: maxSpawnPositions.Array.data[1].x
-      value: 10
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 3957943545165633379, guid: cec87b431b457a7408e712124420664f,
         type: 3}
       propertyPath: maxSpawnPositions.Array.data[2].x
-      value: 10
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 3957943545165633379, guid: cec87b431b457a7408e712124420664f,
         type: 3}
@@ -273,7 +273,7 @@ PrefabInstance:
     - target: {fileID: 3957943545165633379, guid: cec87b431b457a7408e712124420664f,
         type: 3}
       propertyPath: minSpawnPositions.Array.data[0].x
-      value: -10
+      value: -15
       objectReference: {fileID: 0}
     - target: {fileID: 3957943545165633379, guid: cec87b431b457a7408e712124420664f,
         type: 3}
@@ -293,7 +293,7 @@ PrefabInstance:
     - target: {fileID: 3957943545165633379, guid: cec87b431b457a7408e712124420664f,
         type: 3}
       propertyPath: minSpawnPositions.Array.data[3].x
-      value: -10
+      value: -15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cec87b431b457a7408e712124420664f, type: 3}

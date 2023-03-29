@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TreeEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -12,12 +13,14 @@ namespace MyFlowField
         public int numUnitsPerSpawn;
         public float moveSpeed;
      
-        private List<GameObject> unitsInGame;
-    
+        private List<Transform> _unitsInGame;
+        private List<Monster> _monsters;
+
     	private void Awake()
     	{
-    		unitsInGame = new List<GameObject>();
-            
+    		_unitsInGame = new List<Transform>(200);
+            _monsters = new List<Monster>(200);
+
         }
     
     	void Update()
@@ -39,16 +42,25 @@ namespace MyFlowField
     	private void FixedUpdate()
     	{
     		if (gridController.curFlowField == null) { return; }
-    		foreach (GameObject unit in unitsInGame)
-    		{
-    			var position = unit.transform.position;
-                Cell cellBelow = gridController.curFlowField.GetCellFromWorldPos(position);
-    			Vector3 moveDirection = new Vector3(cellBelow.bestDirection.Vector.x, cellBelow.bestDirection.Vector.y,0);
-    			/*position += moveDirection * (Time.fixedDeltaTime * moveSpeed);
-    			unit.transform.position = position;*/
-                unit.GetComponent<Rigidbody2D>().velocity = moveSpeed * moveDirection;
-                /*unit.GetComponent<FBoid>().FlowPath(moveDirection);*/
+
+            if (_monsters.Count < 1) return; 
+	            
+	        for (int i = 0; i < _unitsInGame.Count; i++)
+            {
+	            var position = _unitsInGame[i].transform.position;
+	            Cell cellBelow = gridController.curFlowField.GetCellFromWorldPos(position);
+	            Vector3 moveDirection = new Vector3(cellBelow.bestDirection.Vector.x, cellBelow.bestDirection.Vector.y,0);
+	            position += moveDirection * (Time.fixedDeltaTime * moveSpeed);
+	            _monsters[i].Dir = moveDirection;
+	            if (_monsters[i].CanMove)
+	            {
+		            _unitsInGame[i].position = position;
+		            /*unit.GetComponent<Rigidbody2D>().velocity = moveSpeed * moveDirection;*/
+		            /*unit.GetComponent<FBoid>().FlowPath(moveDirection);*/
+	            }
+	           
             }
+    		
             
     	}
     
@@ -61,9 +73,9 @@ namespace MyFlowField
     		Vector3 newPos;
     		for (int i = 0; i < numUnitsPerSpawn; i++)
     		{
-    			GameObject newUnit = Instantiate(unitPrefab);
+    			var newUnit = Instantiate(unitPrefab);
     			newUnit.transform.parent = transform;
-    			unitsInGame.Add(newUnit);
+    			_unitsInGame.Add(newUnit.transform);
     			// do
     			// {
     				newPos = new Vector3(Random.Range(0, maxSpawnPos.x), Random.Range(0, maxSpawnPos.y), 0);
@@ -71,15 +83,21 @@ namespace MyFlowField
     			// }
     			// while (Physics.OverlapSphere(newPos, 0.25f, colMask).Length > 0);
     		}
+
+            for (int i = 0; i < _unitsInGame.Count; i++)
+            {
+	            _unitsInGame[i].TryGetComponent(out Monster m);
+	            _monsters.Add(m);
+            }
     	}
 
         private void DestroyUnits()
     	{
-    		foreach (GameObject go in unitsInGame)
+    		foreach (Transform go in _unitsInGame)
     		{
     			Destroy(go);
     		}
-    		unitsInGame.Clear();
+    		_unitsInGame.Clear();
     	}
 
     }

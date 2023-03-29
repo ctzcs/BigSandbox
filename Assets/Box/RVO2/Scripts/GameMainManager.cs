@@ -20,7 +20,7 @@ public class GameMainManager : SingletonBehaviour<GameMainManager>
     // Use this for initialization
     void Start()
     {
-        Simulator.Instance.setTimeStep(0.25f);//设置时步 越大越快
+        Simulator.Instance.setTimeStep(0.5f);//设置时步 越大越快
         /*Simulator.Instance.setAgentDefaults(15.0f, 10, 5.0f, 5.0f, 2.0f, 2.0f, new Vector2(0.0f, 0.0f));*/
         //设置Agent的默认属性
         float neighborDist = 5.0f;//检测与邻居避障的最大距离（要关心的范围），越大纳入思考的数据量越大，越小越不安全

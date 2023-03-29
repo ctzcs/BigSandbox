@@ -1,0 +1,65 @@
+#pragma kernel CSMain
+#define GROUP_SIZE 256
+// Compute Shader 也定义好相关的结构
+struct Boid
+{
+    float3 position;
+    float3 direction;
+};
+// RWStructuredBuffer 是可读写流
+RWStructuredBuffer<Boid> boidsBuffer;
+
+
+float deltaTime;
+float boidSpeed;
+float3 flockPosition;
+float neighbourDistance;
+int boidsCount;
+
+
+[numthreads(GROUP_SIZE,1,1)]
+void CSMain(uint3 id : SV_GroupThreadID)
+{
+    Boid boid = boidsBuffer[id.x];
+    float3 separation = 0;
+    float3 alignment = 0;
+    float3 cohesion = flockPosition;
+    uint nearbyCount = 1;
+    // 通过周围的鸟的信息，计算经过三个特性后，这一只鸟的方向和位置。
+    for (int i = 0; i < boidsCount; i++)
+    {
+        if (i == id.x)
+            continue;
+        Boid tempBoid = boidsBuffer[i];
+        if (tempBoid.position.x == -1000)
+        {
+            continue;
+        }
+        
+        float3 tempBoid_position = tempBoid.position;
+        float3 offset = boid.position - tempBoid_position;
+        float dist = max(length(offset), 0.000001); // 防止 offset 为 0，下面做除法分母
+
+        if (dist < neighbourDistance)
+        {
+            
+            // 两个 boid 越接近，产生的 separation 越大
+            separation += offset * (1.0 / dist - 1.0 / neighbourDistance);
+            alignment += boidsBuffer[i].direction;
+            cohesion += tempBoid_position;
+
+            nearbyCount += 1;
+        }
+    }
+
+    float avg = 1.0 / nearbyCount;
+    alignment *= avg;
+    cohesion *= avg;
+    cohesion = normalize(cohesion - boid.position);
+    float3 direction = alignment + separation + cohesion;
+    boid.direction = lerp(direction, normalize(boid.direction), 0.94);
+    boid.position += boid.direction * boidSpeed * deltaTime;
+    
+    // 设置数据到 Buffer，等待 CPU 读取
+    boidsBuffer[id.x] = boid;
+}
