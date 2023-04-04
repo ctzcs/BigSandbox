@@ -55,7 +55,7 @@ namespace MyFlowField
                 _instance._flowField.FindPath(request, _instance.FinishFindingPath);
                 Debug.Log(Thread.CurrentThread.ManagedThreadId);
             });*/
-           
+
 
         }
     

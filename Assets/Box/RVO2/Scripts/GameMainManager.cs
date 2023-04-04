@@ -94,7 +94,32 @@ public class GameMainManager : SingletonBehaviour<GameMainManager>
                 CreatAgent(num);
             }
         }
+        /*Simulator.Instance.doStep();*/
+        Simulate();
 
-        Simulator.Instance.doStep();
+        /*if (_isDown)
+        {
+            Simulator.Instance.DoSimulate(OnStart,OnFinished);
+        }*/
     }
+
+    async void Simulate()
+    {
+        await Simulator.Instance.DoStep();
+    }
+
+    private bool _isDown = true;
+
+    void OnStart()
+    {
+        _isDown = false;
+    }
+
+    void OnFinished()
+    {
+        _isDown = true;
+    }
+    
+
+
 }

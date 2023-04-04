@@ -54,8 +54,9 @@ namespace MyFlowField
 	            _monsters[i].Dir = moveDirection;
 	            if (_monsters[i].CanMove)
 	            {
-		            _unitsInGame[i].position = position;
-		            /*unit.GetComponent<Rigidbody2D>().velocity = moveSpeed * moveDirection;*/
+		            /*_unitsInGame[i].position = position;*/
+		            _unitsInGame[i].GetComponent<Rigidbody2D>().MovePosition(position);
+		            /*_unitsInGame[i].GetComponent<Rigidbody2D>().velocity = moveSpeed * moveDirection;*/
 		            /*unit.GetComponent<FBoid>().FlowPath(moveDirection);*/
 	            }
 	           

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using MyFlowField.Scripts.Player;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -12,14 +13,20 @@ public class Player : MonoBehaviour
     public float rate;
 
     private UnitMove _unitMove;
+
+    public HitBox hitBox;
     // Start is called before the first frame update
     void Start()
     {
         
         anim = GetComponent<Animator>();
         _unitMove = GetComponent<UnitMove>();
-
+        /*Application.targetFrameRate = 75;*/
+        hitBox.onHitBoxEnter.AddListener(HitBox);
+        
     }
+
+    
 
     private void FixedUpdate()
     {
@@ -38,5 +45,10 @@ public class Player : MonoBehaviour
         {
             col.transform.position -= (col.transform.position - this.transform.position)*10;
         }
+    }
+
+    void HitBox()
+    {
+        Debug.Log("在Player中使用Hitbox");
     }
 }

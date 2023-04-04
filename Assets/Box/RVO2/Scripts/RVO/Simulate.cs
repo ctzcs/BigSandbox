@@ -33,6 +33,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace RVO
 {
@@ -92,6 +95,38 @@ namespace RVO
              * <param name="obj">Unused.</param>
              */
             internal void update(object obj)
+            {
+                for (int index = start_; index < end_; ++index)
+                {
+                    Simulator.Instance.agents_[index].update();
+                }
+
+                doneEvent_.Set();
+            }
+            
+            
+            /**
+             * <summary>Performs a simulation step.</summary>
+             *
+             * <param name="obj">Unused.</param>
+             */
+            internal void Mystep()
+            {
+                for (int index = start_; index < end_; ++index)
+                {
+                    Simulator.Instance.agents_[index].computeNeighbors();
+                    Simulator.Instance.agents_[index].computeNewVelocity();
+                }
+                doneEvent_.Set();
+            }
+
+            /**
+             * <summary>updates the two-dimensional position and
+             * two-dimensional velocity of each agent.</summary>
+             *
+             * <param name="obj">Unused.</param>
+             */
+            internal void Myupdate()
             {
                 for (int index = start_; index < end_; ++index)
                 {
@@ -377,13 +412,60 @@ namespace RVO
                 doneEvents_[block].Reset();
                 ThreadPool.QueueUserWorkItem(workers_[block].update);
             }
-
             WaitHandle.WaitAll(doneEvents_);
-
             globalTime_ += timeStep_;
 
             return globalTime_;
         }
+        
+        //没啥用
+        public async UniTask<float> DoStep()
+        {
+            updateDeleteAgent();
+            
+            if (workers_ == null)
+            {
+                workers_ = new Worker[numWorkers_];
+                doneEvents_ = new ManualResetEvent[workers_.Length];
+                workerAgentCount_ = getNumAgents();
+
+                for (int block = 0; block < workers_.Length; ++block)
+                {
+                    doneEvents_[block] = new ManualResetEvent(false);
+                    workers_[block] = new Worker(block * getNumAgents() / workers_.Length, (block + 1) * getNumAgents() / workers_.Length, doneEvents_[block]);
+                }
+            }
+
+            if (workerAgentCount_ != getNumAgents())
+            {
+                workerAgentCount_ = getNumAgents();
+                for (int block = 0; block < workers_.Length; ++block)
+                {
+                    workers_[block].config(block * getNumAgents() / workers_.Length, (block + 1) * getNumAgents() / workers_.Length);
+                }
+            }
+
+            kdTree_.buildAgentTree();
+            await UniTask.SwitchToThreadPool();
+            for (int block = 0; block < workers_.Length; ++block)
+            {
+                doneEvents_[block].Reset();
+                ThreadPool.QueueUserWorkItem(workers_[block].step);
+            }
+
+            WaitHandle.WaitAll(doneEvents_);
+
+            for (int block = 0; block < workers_.Length; ++block)
+            {
+                doneEvents_[block].Reset();
+                ThreadPool.QueueUserWorkItem(workers_[block].update);
+            } 
+            WaitHandle.WaitAll(doneEvents_);
+            await UniTask.Yield(PlayerLoopTiming.Update);
+            globalTime_ += timeStep_;
+            return globalTime_;
+        }
+
 
         /**
          * <summary>Returns the specified agent neighbor of the specified agent.

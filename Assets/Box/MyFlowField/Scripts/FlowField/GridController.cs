@@ -39,7 +39,7 @@ namespace MyFlowField
             
             
             _r = true;
-            StartCoroutine("ThreadRequest");
+            /*StartCoroutine("ThreadRequest");*/
         }
 
         void GetField(FlowField field, bool b)
@@ -93,7 +93,8 @@ namespace MyFlowField
                     
                     countPer = 0;
                 }*/
-                
+                PathRequest request = new PathRequest(_player.position,spawnerPoint.position,gridSize,cellRadius,GetField);
+                FieldRequestManager.FlowFieldRequest(request);
                 
             }
         }

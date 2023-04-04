@@ -187,8 +187,8 @@ namespace DataStructures.ViliWonka.Heap {
             heap[B] = tempHeap;
         }
 
-        protected virtual void UpsizeHeap() {
-
+        protected virtual void UpsizeHeap()
+        {
             maxSize *= 2;
             System.Array.Resize(ref heap, maxSize + 1);
         }

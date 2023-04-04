@@ -34,7 +34,7 @@ public class Monster : MonoBehaviour
 
     }
 
-    private void FixedUpdate()
+    /*private void FixedUpdate()
     {
         /*_dir = (target.position - _transform.position).normalized;
         Physics2D.RaycastNonAlloc(_transform.position, _dir, _hit2Ds, _detectRange);
@@ -44,13 +44,14 @@ public class Monster : MonoBehaviour
         {
             return;
         }
-        _transform.position += _dir * _moveSpeed;*/
+        _transform.position += _dir * _moveSpeed;#1#
+        */
         
     }
 
-    private void OnDrawGizmos()
+    /*private void OnDrawGizmos()
     {
-        /*Gizmos.DrawLine(_transform.position,_transform.position +_dir*_detectRange);*/
+        /*Gizmos.DrawLine(_transform.position,_transform.position +_dir*_detectRange);#1#
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -65,5 +66,5 @@ public class Monster : MonoBehaviour
     private void OnCollisionExit2D(Collision2D other)
     {
         _canMove = true;
-    }
-}
+    }*/
+
