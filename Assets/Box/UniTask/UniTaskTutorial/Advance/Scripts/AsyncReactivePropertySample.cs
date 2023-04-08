@@ -39,7 +39,7 @@ namespace UniTaskTutorial.Advance.Scripts
             HpSlider.maxValue = maxHp;
             HpSlider.value = maxHp;
             
-            currentHp.Subscribe(OnHpChange);
+            currentHp.Subscribe(OnHpChange);//订阅血条改变
             CheckHpChange(currentHp).Forget();
             CheckFirstLowHp(currentHp).Forget();
             
@@ -87,7 +87,7 @@ namespace UniTaskTutorial.Advance.Scripts
         {
             _cancellationTokenSource.Cancel();
             _cancellationTokenSource = new CancellationTokenSource();
-            _linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(_cancellationTokenSource.Token, this.GetCancellationTokenOnDestroy());
+            _linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(_cancellationTokenSource.Token, this.GetCancellationTokenOnDestroy());//toke取消或者这个Mono销毁了就取消异步
             await SyncSlider(hp, _linkedTokenSource.Token);
         }
 

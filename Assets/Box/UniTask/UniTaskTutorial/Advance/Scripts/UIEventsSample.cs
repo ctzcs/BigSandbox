@@ -64,11 +64,14 @@ public class UIEventsSample : MonoBehaviour
     private async UniTaskVoid CheckCooldownClickButton(CancellationToken token)
     {
         var asyncEnumerable = CoolDownButton.OnClickAsAsyncEnumerable();
-        await asyncEnumerable.ForEachAwaitAsync(async (_) =>
+        await asyncEnumerable.Queue().ForEachAwaitAsync(async (_) =>
         {
-            CoolDownEventText.text = "被点击了，冷却中……";
+            CoolDownEventText.text = "被点击了，冷却中……"+ Time.time;
             await UniTask.Delay(TimeSpan.FromSeconds(CooldownTime), cancellationToken: token);
-            CoolDownEventText.text = "冷却好了，可以点了……";
+            CoolDownEventText.text = "冷却好了，可以点了……"+ Time.time;
+            Debug.Log("什么时候才触发");
+            
+            
         }, cancellationToken: token);
     }
 
