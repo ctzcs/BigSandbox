@@ -40,11 +40,11 @@ public class GameMainManager : SingletonBehaviour<GameMainManager>
     private void UpdateMousePosition()
     {
         Vector3 position = Vector3.zero;
-        Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        /*Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         float rayDistance;
         if (m_hPlane.Raycast(mouseRay, out rayDistance))
-            position = mouseRay.GetPoint(rayDistance);
-
+            position = mouseRay.GetPoint(rayDistance);*/
+        position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePosition.x_ = position.x;
         //更新為y
         mousePosition.y_ = position.y;
