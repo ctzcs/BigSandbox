@@ -103,38 +103,6 @@ namespace RVO
 
                 doneEvent_.Set();
             }
-            
-            
-            /**
-             * <summary>Performs a simulation step.</summary>
-             *
-             * <param name="obj">Unused.</param>
-             */
-            internal void Mystep()
-            {
-                for (int index = start_; index < end_; ++index)
-                {
-                    Simulator.Instance.agents_[index].computeNeighbors();
-                    Simulator.Instance.agents_[index].computeNewVelocity();
-                }
-                doneEvent_.Set();
-            }
-
-            /**
-             * <summary>updates the two-dimensional position and
-             * two-dimensional velocity of each agent.</summary>
-             *
-             * <param name="obj">Unused.</param>
-             */
-            internal void Myupdate()
-            {
-                for (int index = start_; index < end_; ++index)
-                {
-                    Simulator.Instance.agents_[index].update();
-                }
-
-                doneEvent_.Set();
-            }
         }
 
         internal IDictionary<int, int> agentNo2indexDict_;
@@ -418,7 +386,7 @@ namespace RVO
             return globalTime_;
         }
         
-        //没啥用
+        //没啥用?好像有用吧。
         public async UniTask<float> DoStep()
         {
             updateDeleteAgent();

@@ -12,9 +12,12 @@ public class GameAgent : MonoBehaviour
 
     /** Random number generator. */
     private Random m_random = new Random();
+
+    private Transform _transform;
     // Use this for initialization
     void Start()
     {
+        _transform = this.transform;
     }
 
     // Update is called once per frame
@@ -24,7 +27,11 @@ public class GameAgent : MonoBehaviour
         {
             Vector2 pos = Simulator.Instance.getAgentPosition(sid);
             Vector2 vel = Simulator.Instance.getAgentPrefVelocity(sid);
-            transform.position = new Vector3(pos.x(),pos.y(), transform.position.z);
+            var targetPos = new Vector3(pos.x(),pos.y(), 0);
+            MoveTo(targetPos,10);
+
+
+
             /*if (Math.Abs(vel.x()) > 0.01f && Math.Abs(vel.y()) > 0.01f)
                 //以Y轴为移动朝向
                 transform.up = new Vector3(vel.x(),vel.y(), 0 ).normalized;*/
@@ -55,5 +62,13 @@ public class GameAgent : MonoBehaviour
         Simulator.Instance.setAgentPrefVelocity(sid, Simulator.Instance.getAgentPrefVelocity(sid) +
                                                      dist*
                                                      new Vector2((float) Math.Cos(angle), (float) Math.Sin(angle)));
+    }
+
+    void MoveTo(Vector3 target,float speed)
+    {
+        if (Math.Abs(target.x) >= 0 )
+        {
+            _transform.position = Vector3.Lerp(_transform.position, target, Time.deltaTime*speed);
+        }
     }
 }
