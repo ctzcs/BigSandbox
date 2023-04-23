@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Lean;
 using RVO;
 using UnityEngine;
@@ -95,7 +96,7 @@ public class GameMainManager : SingletonBehaviour<GameMainManager>
             }
         }
         /*Simulator.Instance.doStep();*/
-        Simulate();
+        Simulate().Forget();
 
         /*if (_isDown)
         {
@@ -103,7 +104,7 @@ public class GameMainManager : SingletonBehaviour<GameMainManager>
         }*/
     }
 
-    async void Simulate()
+    async UniTaskVoid Simulate()
     {
         await Simulator.Instance.DoStep();
     }
