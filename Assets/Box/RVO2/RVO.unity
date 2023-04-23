@@ -363,6 +363,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4019206584516337376, guid: c75c07266fafdad41a1dae1ca6c09e0a,
+        type: 3}
+      propertyPath: num
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 4019206584516337376, guid: c75c07266fafdad41a1dae1ca6c09e0a,
+        type: 3}
+      propertyPath: agentPrefab
+      value: 
+      objectReference: {fileID: 1460585504848607292, guid: ff3888f1066c0cb4fa0f3b366742d8ca,
+        type: 3}
     - target: {fileID: 4019206584516337378, guid: c75c07266fafdad41a1dae1ca6c09e0a,
         type: 3}
       propertyPath: m_RootOrder
