@@ -5,6 +5,7 @@ namespace Box1.GPUInstancing
 {
     public class MoveCamera : MonoBehaviour
     {
+        public int moveSpeed = 5;
         // Start is called before the first frame update
         void Start()
         {
@@ -17,7 +18,7 @@ namespace Box1.GPUInstancing
             float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
             Vector3 dir = new Vector3(horizontal, 0, vertical);
-            transform.position += dir.normalized * Time.deltaTime;
+            transform.position += dir.normalized * (moveSpeed * Time.deltaTime);
 
         }
     }

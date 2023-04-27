@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 namespace Box1.GPUInstancing
 {
@@ -23,6 +24,8 @@ namespace Box1.GPUInstancing
         private Material _material;
         private bool _dirty = false;
         public List<GameObject> objs = new List<GameObject>();
+
+        public List<MeshRenderer> renderers = new List<MeshRenderer>();
         private void Start()
         {
             _renderer = prefabs.GetComponent<MeshRenderer>();
@@ -78,8 +81,21 @@ namespace Box1.GPUInstancing
                     var pos = new Vector3(i,0,j);
                     var obj = Instantiate(prefabs);
                     obj.transform.localPosition = pos;
+                    
+                    var r = obj.GetComponent<MeshRenderer>();
+                    renderers.Add(r);
                     objs.Add(obj);
                 }
+            }
+
+            //通过block来设置可更改的属性
+            MaterialPropertyBlock prop = new MaterialPropertyBlock();
+            for (int i = 0; i < renderers.Count; i++)
+            {
+                prop = new MaterialPropertyBlock();
+                Color color = new Color(Random.Range(0f,1f),Random.Range(0f,1f),Random.Range(0f,1f),1);
+                prop.SetColor("_Color",color);
+                renderers[i].SetPropertyBlock(prop);
             }
         }
 
@@ -93,6 +109,8 @@ namespace Box1.GPUInstancing
             {
                 Destroy(objs[i]);
             }
+            objs.Clear();
+            renderers.Clear();
         }
 
         private void OnGUI()
