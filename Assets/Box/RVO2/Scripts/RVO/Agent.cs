@@ -36,7 +36,7 @@ using System.Collections.Generic;
 namespace RVO
 {
     /**
-     * <summary>Defines an agent in the simulation.</summary>
+     * <summary>定义模拟中的agent。Defines an agent in the simulation.</summary>
      */
     internal class Agent
     {

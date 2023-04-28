@@ -36,7 +36,7 @@ using System;
 namespace RVO
 {
     /**
-     * <summary>Defines k-D trees for agents and static obstacles in the
+     * <summary>为障碍物和agent定义kd-tree。Defines k-D trees for agents and static obstacles in the
      * simulation.</summary>
      */
     internal class KdTree
@@ -140,7 +140,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Defines a node of an obstacle k-D tree.</summary>
+         * <summary>定义一个障碍物kd树的一个节点。Defines a node of an obstacle k-D tree.</summary>
          */
         private class ObstacleTreeNode
         {
@@ -150,7 +150,7 @@ namespace RVO
         };
 
         /**
-         * <summary>The maximum size of an agent k-D tree leaf.</summary>
+         * <summary>最大叶子节点数。The maximum size of an agent k-D tree leaf.</summary>
          */
         private const int MAX_LEAF_SIZE = 10;
 

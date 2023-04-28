@@ -59,8 +59,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Computes the squared length of a specified two-dimensional
-         * vector.</summary>
+         * <summary>计算二维向量的平方长度</summary>
          *
          * <returns>The squared length of the two-dimensional vector.</returns>
          *
@@ -73,8 +72,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Computes the normalization of the specified two-dimensional
-         * vector.</summary>
+         * <summary>计算二维向量的归一化</summary>
          *
          * <returns>The normalization of the two-dimensional vector.</returns>
          *
@@ -87,7 +85,8 @@ namespace RVO
         }
 
         /**
-         * <summary>Computes the determinant of a two-dimensional square matrix
+         * <summary>计算由二维向量组成以行排列组成的行列式的值。也就是由v1和v2组成的平行四边形的面积。
+         * 其实也可以换一种说法，这就是叉乘。Computes the determinant of a two-dimensional square matrix
          * with rows consisting of the specified two-dimensional vectors.
          * </summary>
          *
@@ -105,7 +104,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Computes the squared distance from a line segment with the
+         * <summary>计算带有端点的线段到一个具体的点的距离。Computes the squared distance from a line segment with the
          * specified endpoints to a specified point.</summary>
          *
          * <returns>The squared distance from the line segment to the point.
@@ -135,7 +134,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Computes the absolute value of a float.</summary>
+         * <summary>计算一个浮点数的绝对值</summary>
          *
          * <returns>The absolute value of the float.</returns>
          *
@@ -148,7 +147,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Computes the signed distance from a line connecting the
+         * <summary>计算点到直线的距离Computes the signed distance from a line connecting the
          * specified points to a specified point.</summary>
          *
          * <returns>Positive when the point c lies to the left of the line ab.
@@ -165,7 +164,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Computes the square of a float.</summary>
+         * <summary>计算浮点数的平方.</summary>
          *
          * <returns>The square of the float.</returns>
          *
@@ -177,7 +176,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Computes the square root of a float.</summary>
+         * <summary>计算平方根.</summary>
          *
          * <returns>The square root of the float.</returns>
          *

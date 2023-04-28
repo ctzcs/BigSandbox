@@ -40,17 +40,20 @@ using UnityEngine;
 namespace RVO
 {
     /**
-     * <summary>Defines the simulation.</summary>
+     * <summary>碰撞模拟类</summary>
      */
     public class Simulator
     {
         /**
-         * <summary>Defines a worker.</summary>
+         * <summary>定义一个workder</summary>
          */
         private class Worker
         {
+            //手动重置事件
             private ManualResetEvent doneEvent_;
+            //处理的开始agent的索引
             private int end_;
+            //处理的结束agent的索引
             private int start_;
 
             /**
@@ -74,7 +77,7 @@ namespace RVO
             }
 
             /**
-             * <summary>Performs a simulation step.</summary>
+             * <summary>执行一次模拟的step。Performs a simulation step.</summary>
              *
              * <param name="obj">Unused.</param>
              */
@@ -82,7 +85,9 @@ namespace RVO
             {
                 for (int index = start_; index < end_; ++index)
                 {
+                    //计算代理的邻居
                     Simulator.Instance.agents_[index].computeNeighbors();
+                    //计算代理的新速度
                     Simulator.Instance.agents_[index].computeNewVelocity();
                 }
                 doneEvent_.Set();
@@ -105,8 +110,8 @@ namespace RVO
             }
         }
 
-        internal IDictionary<int, int> agentNo2indexDict_;
-        internal IDictionary<int, int> index2agentNoDict_;
+        internal IDictionary<int, int> agentNo2indexDict_;//agent的id转index的id
+        internal IDictionary<int, int> index2agentNoDict_;//index的id转agent的id
         internal IList<Agent> agents_;
         internal IList<Obstacle> obstacles_;
         internal KdTree kdTree_;
@@ -260,7 +265,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Adds a new obstacle to the simulation.</summary>
+         * <summary>给模拟添加一个障碍。Adds a new obstacle to the simulation.</summary>
          *
          * <returns>The number of the first vertex of the obstacle, or -1 when
          * the number of vertices is less than two.</returns>
@@ -317,7 +322,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Clears the simulation.</summary>
+         * <summary>清除模拟。Clears the simulation.</summary>
          */
         public void Clear()
         {
