@@ -36,7 +36,7 @@ using System.Globalization;
 namespace RVO
 {
     /**
-     * <summary>Defines a two-dimensional vector.</summary>
+     * <summary>定义一个二维向量Defines a two-dimensional vector.</summary>
      */
     public struct Vector2
     {

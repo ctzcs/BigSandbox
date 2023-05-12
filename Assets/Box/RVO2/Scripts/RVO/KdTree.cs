@@ -36,13 +36,14 @@ using System;
 namespace RVO
 {
     /**
-     * <summary>为障碍物和agent定义kd-tree。Defines k-D trees for agents and static obstacles in the
+     * <summary>为障碍物和agent的模拟定义kd-tree。
+     * Defines k-D trees for agents and static obstacles in the
      * simulation.</summary>
      */
     internal class KdTree
     {
         /**
-         * <summary>Defines a node of an agent k-D tree.</summary>
+         * <summary>定义agent KDTree的节点。Defines a node of an agent k-D tree.</summary>
          */
         private struct AgentTreeNode
         {
@@ -57,7 +58,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Defines a pair of scalar values.</summary>
+         * <summary>定义一对标量值Defines a pair of scalar values.</summary>
          */
         private struct FloatPair
         {
@@ -144,8 +145,17 @@ namespace RVO
          */
         private class ObstacleTreeNode
         {
+            /// <summary>
+            /// 障碍物
+            /// </summary>
             internal Obstacle obstacle_;
+            /// <summary>
+            /// 障碍物的左孩子
+            /// </summary>
             internal ObstacleTreeNode left_;
+            /// <summary>
+            /// 障碍物的右孩子
+            /// </summary>
             internal ObstacleTreeNode right_;
         };
 
@@ -153,13 +163,21 @@ namespace RVO
          * <summary>最大叶子节点数。The maximum size of an agent k-D tree leaf.</summary>
          */
         private const int MAX_LEAF_SIZE = 10;
-
+        /// <summary>
+        /// 所有的agent
+        /// </summary>
         private Agent[] agents_;
+        /// <summary>
+        /// 树中所有的agent节点
+        /// </summary>
         private AgentTreeNode[] agentTree_;
+        /// <summary>
+        /// 障碍树的根节点
+        /// </summary>
         private ObstacleTreeNode obstacleTree_;
 
         /**
-         * <summary>Builds an agent k-D tree.</summary>
+         * <summary>建立一个agent的KD-tree，Builds an agent k-D tree.</summary>
          */
         internal void buildAgentTree()
         {
@@ -187,7 +205,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Builds an obstacle k-D tree.</summary>
+         * <summary>建立一个障碍物的kd-tree。Builds an obstacle k-D tree.</summary>
          */
         internal void buildObstacleTree()
         {
@@ -204,7 +222,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Computes the agent neighbors of the specified agent.
+         * <summary>计算agent附近的agent。Computes the agent neighbors of the specified agent.
          * </summary>
          *
          * <param name="agent">The agent for which agent neighbors are to be
@@ -217,7 +235,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Computes the obstacle neighbors of the specified agent.
+         * <summary>计算agent附近的障碍物Computes the obstacle neighbors of the specified agent.
          * </summary>
          *
          * <param name="agent">The agent for which obstacle neighbors are to be
@@ -248,6 +266,12 @@ namespace RVO
             return queryVisibilityRecursive(q1, q2, radius, obstacleTree_);
         }
 
+        /// <summary>
+        /// 查询最近的agent
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="radius"></param>
+        /// <returns></returns>
         internal int queryNearAgent(Vector2 point, float radius)
         {
             float rangeSq = float.MaxValue;
@@ -259,12 +283,12 @@ namespace RVO
         }
 
         /**
-         * <summary>Recursive method for building an agent k-D tree.</summary>
+         * <summary>建造kd树的递归方法。Recursive method for building an agent k-D tree.</summary>
          *
-         * <param name="begin">The beginning agent k-D tree node node index.
+         * <param name="begin">开始节点的索引The beginning agent k-D tree node node index.
          * </param>
-         * <param name="end">The ending agent k-D tree node index.</param>
-         * <param name="node">The current agent k-D tree node index.</param>
+         * <param name="end">结束节点的索引The ending agent k-D tree node index.</param>
+         * <param name="node">当前的agent的索引The current agent k-D tree node index.</param>
          */
         private void buildAgentTreeRecursive(int begin, int end, int node)
         {
@@ -330,7 +354,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Recursive method for building an obstacle k-D tree.
+         * <summary>建造障碍树的递归方法。Recursive method for building an obstacle k-D tree.
          * </summary>
          *
          * <returns>An obstacle k-D tree node.</returns>
@@ -486,6 +510,13 @@ namespace RVO
             }
         }
 
+        /// <summary>
+        /// 查询agent树的方法递归方法
+        /// </summary>
+        /// <param name="position">位置</param>
+        /// <param name="rangeSq">范围</param>
+        /// <param name="agentNo">agent的索引</param>
+        /// <param name="node">节点的索引</param>
         private void queryAgentTreeRecursive(Vector2 position, ref float rangeSq, ref int agentNo, int node)
         {
             if (agentTree_[node].end_ - agentTree_[node].begin_ <= MAX_LEAF_SIZE)
@@ -534,7 +565,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Recursive method for computing the agent neighbors of the
+         * <summary>计算agent邻居的递归方法。Recursive method for computing the agent neighbors of the
          * specified agent.</summary>
          *
          * <param name="agent">The agent for which agent neighbors are to be
@@ -585,13 +616,13 @@ namespace RVO
         }
 
         /**
-         * <summary>Recursive method for computing the obstacle neighbors of the
+         * <summary>计算agent附近障碍物的方法。Recursive method for computing the obstacle neighbors of the
          * specified agent.</summary>
          *
          * <param name="agent">The agent for which obstacle neighbors are to be
          * computed.</param>
          * <param name="rangeSq">The squared range around the agent.</param>
-         * <param name="node">The current obstacle k-D node.</param>
+         * <param name="node">目前的kdtree的障碍物The current obstacle k-D node.</param>
          */
         private void queryObstacleTreeRecursive(Agent agent, float rangeSq, ObstacleTreeNode node)
         {
@@ -624,7 +655,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Recursive method for querying the visibility between two
+         * <summary>在指定半径内查询两点之间的可见性的递归方法Recursive method for querying the visibility between two
          * points within a specified radius.</summary>
          *
          * <returns>True if q1 and q2 are mutually visible within the radius;

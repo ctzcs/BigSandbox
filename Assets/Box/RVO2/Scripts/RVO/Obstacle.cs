@@ -38,11 +38,29 @@ namespace RVO
     internal class Obstacle
     {
 
+        /// <summary>
+        /// 下一个障碍物
+        /// </summary>
         internal Obstacle next_;
+        /// <summary>
+        /// 上一个障碍物
+        /// </summary>
         internal Obstacle previous_;
+        /// <summary>
+        /// 朝向
+        /// </summary>
         internal Vector2 direction_;
+        /// <summary>
+        /// 位置
+        /// </summary>
         internal Vector2 point_;
+        /// <summary>
+        /// id
+        /// </summary>
         internal int id_;
+        /// <summary>
+        /// 是否是凸包
+        /// </summary>
         internal bool convex_;
     }
 }

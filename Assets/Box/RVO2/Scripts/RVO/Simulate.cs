@@ -139,6 +139,9 @@ namespace RVO
             agents_[agentNo2indexDict_[agentNo]].needDelete_ = true;
         }
 
+        /// <summary>
+        /// 更新删除的代理
+        /// </summary>
         void updateDeleteAgent()
         {
             bool isDelete = false;
@@ -267,10 +270,10 @@ namespace RVO
         /**
          * <summary>给模拟添加一个障碍。Adds a new obstacle to the simulation.</summary>
          *
-         * <returns>The number of the first vertex of the obstacle, or -1 when
+         * <returns>如果顶点数小于2返回-1，否咋返回障碍物的数量。The number of the first vertex of the obstacle, or -1 when
          * the number of vertices is less than two.</returns>
          *
-         * <param name="vertices">List of the vertices of the polygonal obstacle
+         * <param name="vertices">多边形障碍物的顶点列表List of the vertices of the polygonal obstacle
          * in counterclockwise order.</param>
          *
          * <remarks>To add a "negative" obstacle, e.g. a bounding polygon around
@@ -339,10 +342,10 @@ namespace RVO
         }
 
         /**
-         * <summary>Performs a simulation step and updates the two-dimensional
+         * <summary>执行一个模拟，更新二维的位置和二维的速度。Performs a simulation step and updates the two-dimensional
          * position and two-dimensional velocity of each agent.</summary>
          *
-         * <returns>The global time after the simulation step.</returns>
+         * <returns>模拟发生后的全局时间。The global time after the simulation step.</returns>
          */
         public float doStep()
         {
@@ -707,7 +710,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Returns the number of the obstacle vertex succeeding the
+         * <summary>获取障碍物的下一个顶点。Returns the number of the obstacle vertex succeeding the
          * specified obstacle vertex in its polygon.</summary>
          *
          * <returns>The number of the obstacle vertex succeeding the specified
@@ -722,7 +725,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Returns the number of the obstacle vertex preceding the
+         * <summary>获取障碍物顶点的id。Returns the number of the obstacle vertex preceding the
          * specified obstacle vertex in its polygon.</summary>
          *
          * <returns>The number of the obstacle vertex preceding the specified
@@ -747,7 +750,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Processes the obstacles that have been added so that they
+         * <summary>处理障碍物。Processes the obstacles that have been added so that they
          * are accounted for in the simulation.</summary>
          *
          * <remarks>Obstacles added to the simulation after this function has
@@ -902,7 +905,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Sets the radius of a specified agent.</summary>
+         * <summary>设置一个agent的半径。Sets the radius of a specified agent.</summary>
          *
          * <param name="agentNo">The number of the agent whose radius is to be
          * modified.</param>
@@ -943,7 +946,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Sets the two-dimensional linear velocity of a specified
+         * <summary>设置一个agent的二维线性速度。Sets the two-dimensional linear velocity of a specified
          * agent.</summary>
          *
          * <param name="agentNo">The number of the agent whose two-dimensional
@@ -957,7 +960,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Sets the global time of the simulation.</summary>
+         * <summary>设置模拟的全局时间。Sets the global time of the simulation.</summary>
          *
          * <param name="globalTime">The global time of the simulation.</param>
          */
@@ -967,7 +970,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Sets the number of workers.</summary>
+         * <summary>设置workers的数量。Sets the number of workers.</summary>
          *
          * <param name="numWorkers">The number of workers.</param>
          */
@@ -985,7 +988,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Sets the time step of the simulation.</summary>
+         * <summary>设置模拟step的时间。Sets the time step of the simulation.</summary>
          *
          * <param name="timeStep">The time step of the simulation. Must be
          * positive.</param>
@@ -996,7 +999,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Constructs and initializes a simulation.</summary>
+         * <summary>初始化一个模拟Constructs and initializes a simulation.</summary>
          */
         private Simulator()
         {

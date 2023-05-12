@@ -40,25 +40,64 @@ namespace RVO
      */
     internal class Agent
     {
+        /// <summary>
+        /// agent的邻居
+        /// </summary>
         internal IList<KeyValuePair<float, Agent>> agentNeighbors_ = new List<KeyValuePair<float, Agent>>();
+        /// <summary>
+        /// 相邻的障碍物
+        /// </summary>
         internal IList<KeyValuePair<float, Obstacle>> obstacleNeighbors_ = new List<KeyValuePair<float, Obstacle>>();
+        /// <summary>
+        /// ORCA分割线
+        /// </summary>
         internal IList<Line> orcaLines_ = new List<Line>();
+        /// <summary>
+        /// 位置
+        /// </summary>
         internal Vector2 position_;
+        /// <summary>
+        /// 倾向的速度
+        /// </summary>
         internal Vector2 prefVelocity_;
+        /// <summary>
+        /// 速度
+        /// </summary>
         internal Vector2 velocity_;
+        /// <summary>
+        /// id
+        /// </summary>
         internal int id_ = 0;
+        /// <summary>
+        /// 最大邻居数量
+        /// </summary>
         internal int maxNeighbors_ = 0;
+        /// <summary>
+        /// 最大速度
+        /// </summary>
         internal float maxSpeed_ = 0.0f;
+        /// <summary>
+        /// 算作邻居的距离
+        /// </summary>
         internal float neighborDist_ = 0.0f;
+        /// <summary>
+        /// 自己的半径
+        /// </summary>
         internal float radius_ = 0.0f;
+        
         internal float timeHorizon_ = 0.0f;
         internal float timeHorizonObst_ = 0.0f;
+        /// <summary>
+        /// 是否需要删除
+        /// </summary>
         internal bool needDelete_ = false;
-
+        /// <summary>
+        /// 新的速度
+        /// </summary>
         private Vector2 newVelocity_;
 
         /**
-         * <summary>Computes the neighbors of this agent.</summary>
+         * <summary>计算这个代理的邻居Computes the neighbors of this agent.</summary>
          */
         internal void computeNeighbors()
         {
@@ -76,7 +115,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Computes the new velocity of this agent.</summary>
+         * <summary>计算新的速度Computes the new velocity of this agent.</summary>
          */
         internal void computeNewVelocity()
         {
@@ -422,11 +461,11 @@ namespace RVO
         }
 
         /**
-         * <summary>Inserts an agent neighbor into the set of neighbors of this
+         * <summary>插入一个邻居Inserts an agent neighbor into the set of neighbors of this
          * agent.</summary>
          *
-         * <param name="agent">A pointer to the agent to be inserted.</param>
-         * <param name="rangeSq">The squared range around this agent.</param>
+         * <param name="agent">被插入的agentA pointer to the agent to be inserted.</param>
+         * <param name="rangeSq">这个agent的方形范围。The squared range around this agent.</param>
          */
         internal void insertAgentNeighbor(Agent agent, ref float rangeSq)
         {
@@ -460,7 +499,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Inserts a static obstacle neighbor into the set of neighbors
+         * <summary>插入静态的邻居Inserts a static obstacle neighbor into the set of neighbors
          * of this agent.</summary>
          *
          * <param name="obstacle">The number of the static obstacle to be
@@ -489,7 +528,7 @@ namespace RVO
         }
 
         /**
-         * <summary>Updates the two-dimensional position and two-dimensional
+         * <summary>更新这个agent的二维空间的位置和速度。Updates the two-dimensional position and two-dimensional
          * velocity of this agent.</summary>
          */
         internal void update()
@@ -499,7 +538,8 @@ namespace RVO
         }
 
         /**
-         * <summary>Solves a one-dimensional linear program on a specified line
+         * <summary>解决一个一维线性规划问题，该问题在一条给定直线上，受到由直线和圆形约束定义的线性约束
+         * Solves a one-dimensional linear program on a specified line
          * subject to linear constraints defined by lines and a circular
          * constraint.</summary>
          *
@@ -601,7 +641,8 @@ namespace RVO
         }
 
         /**
-         * <summary>Solves a two-dimensional linear program subject to linear
+         * <summary>解决一个二维线性规划问题，该问题在一条给定直线上，受到由直线和圆形约束定义的线性约束
+         * Solves a two-dimensional linear program subject to linear
          * constraints defined by lines and a circular constraint.</summary>
          *
          * <returns>The number of the line it fails on, and the number of lines
@@ -655,7 +696,8 @@ namespace RVO
         }
 
         /**
-         * <summary>Solves a two-dimensional linear program subject to linear
+         * <summary>解决一个二维线性规划问题，该问题在一条给定直线上，受到由直线和圆形约束定义的线性约束
+         * Solves a two-dimensional linear program subject to linear
          * constraints defined by lines and a circular constraint.</summary>
          *
          * <param name="lines">Lines defining the linear constraints.</param>
