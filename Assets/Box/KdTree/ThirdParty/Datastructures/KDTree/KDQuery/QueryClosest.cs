@@ -31,6 +31,13 @@ namespace DataStructures.ViliWonka.KDTree {
 
     public partial class KDQuery {
 
+        /// <summary>
+        /// 查询最近的点
+        /// </summary>
+        /// <param name="tree"></param>
+        /// <param name="queryPosition"></param>
+        /// <param name="resultIndices"></param>
+        /// <param name="resultDistances"></param>
         public void ClosestPoint(KDTree tree, Vector3 queryPosition, List<int> resultIndices, List<float> resultDistances = null) {
 
             Reset();

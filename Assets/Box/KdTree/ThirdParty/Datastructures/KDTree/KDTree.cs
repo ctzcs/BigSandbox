@@ -95,6 +95,10 @@ namespace DataStructures.ViliWonka.KDTree {
             Rebuild(maxPointsPerLeafNode);
         }
 
+        /// <summary>
+        /// 重建树
+        /// </summary>
+        /// <param name="maxPointsPerLeafNode"></param>
         public void Rebuild(int maxPointsPerLeafNode = -1) {
 
             for(int i = 0; i < Count; i++) {
@@ -108,6 +112,10 @@ namespace DataStructures.ViliWonka.KDTree {
             BuildTree();
         }
 
+        /// <summary>
+        /// 设置数量
+        /// </summary>
+        /// <param name="newSize"></param>
         public void SetCount(int newSize) {
 
             Count = newSize;
@@ -119,6 +127,9 @@ namespace DataStructures.ViliWonka.KDTree {
             }
         }
 
+        /// <summary>
+        /// 建立一个树
+        /// </summary>
         void BuildTree() {
 
             ResetKDNodeStack();
@@ -131,6 +142,10 @@ namespace DataStructures.ViliWonka.KDTree {
             SplitNode(RootNode);
         }
 
+        /// <summary>
+        /// 获取树的
+        /// </summary>
+        /// <returns></returns>
         KDNode GetKDNode() {
 
             KDNode node = null;
@@ -157,11 +172,15 @@ namespace DataStructures.ViliWonka.KDTree {
             return node;
         }
 
+        /// <summary>
+        /// 重设节点栈
+        /// </summary>
         void ResetKDNodeStack() {
             kdNodesCount = 0;
         }
 
         /// <summary>
+        ///计算所有节点的边界
         /// For calculating root node bounds
         /// </summary>
         /// <returns>Boundary of all Vector3 points</returns>
@@ -263,6 +282,7 @@ namespace DataStructures.ViliWonka.KDTree {
         }
 
         /// <summary>
+        /// 递归分割步骤
         /// Recursive splitting procedure
         /// </summary>
         /// <param name="parent">This is where root node goes</param>

@@ -27,8 +27,14 @@ using UnityEngine;
 
 namespace DataStructures.ViliWonka.KDTree {
 
+    /// <summary>
+    /// 节点
+    /// </summary>
     public class KDNode {
 
+        /// <summary>
+        /// 对齐的轴
+        /// </summary>
         public float partitionCoordinate;
         public int partitionAxis = -1;
 

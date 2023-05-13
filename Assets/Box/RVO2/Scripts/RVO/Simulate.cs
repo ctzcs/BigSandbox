@@ -349,6 +349,7 @@ namespace RVO
          */
         public float doStep()
         {
+            //先删除所有标记删除的agent
             updateDeleteAgent();
 
             if (workers_ == null)
@@ -373,6 +374,7 @@ namespace RVO
                 }
             }
 
+            //这里就是每帧会重建树
             kdTree_.buildAgentTree();
 
             for (int block = 0; block < workers_.Length; ++block)
