@@ -94,6 +94,7 @@ namespace Box1.SparseSet
             _sparse[_density[densityId].id] = densityId;
             return true;
         }
+        
 
         public IEnumerator<T> GetEnumerator()
         {
@@ -102,7 +103,9 @@ namespace Box1.SparseSet
                 yield return _density[i];
             }
         }
+        
 
+        public T[] Density=>_density;
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();

@@ -22,7 +22,7 @@ namespace Box1.SparseSet
     /// </summary>
     public class SparseSetMain : MonoBehaviour
     {
-        private const int testNums = 100000;
+        private const int testNums = 10000;
         private List<Entity> _entities = new List<Entity>(testNums);
         SparseSet<Entity> ss = new SparseSet<Entity>(testNums, testNums);
         private Dictionary<int, Entity> dic = new Dictionary<int, Entity>(testNums);
@@ -32,19 +32,39 @@ namespace Box1.SparseSet
         void Start()
         {
             _stopwatch = new Stopwatch();
+            long l = 0;
+            long s = 0;
+            long d = 0;
             for (int i = 0; i < testNums; i++)
             {
                 int key = i;
                 Entity entity = new Entity(key);
+                _stopwatch.Reset();
+                _stopwatch.Start();
                 _entities.Add(entity);
+                _stopwatch.Stop();
+                l += _stopwatch.ElapsedTicks;
+                _stopwatch.Reset();
+                _stopwatch.Start();
                 ss.Add(entity);
+                _stopwatch.Stop();
+                s += _stopwatch.ElapsedTicks;
+                
+                _stopwatch.Reset();
+                _stopwatch.Start();
                 dic.Add(key,entity);
+                _stopwatch.Stop();
+                d += _stopwatch.ElapsedTicks;
+
             }
+            Debug.Log("list:" +l);
+            Debug.Log("s:" + s);
+            Debug.Log("dic:" +d);
             Debug.Log("Traverse S:"+TraverseSparseSet(ss)+" List:" +TraverseSList(_entities) + " Dic:" + TraverseDic(dic));
-            Debug.Log("Contains S:"+ContainsSparse(ss,10,100) + " Dic:"+ ContainsDic(dic,10,100));
-            Debug.Log("Remove S:"+RemoveSparseSet(ss,10,1000)+" List:" +RemoveList(_entities,10,1000) +" Dic:" + RemoveDic(dic,10,1000));
+            /*Debug.Log("Contains S:"+ContainsSparse(ss,10,100) + " Dic:"+ ContainsDic(dic,10,100));
+            Debug.Log("Remove S:"+RemoveSparseSet(ss,10,1000)+" List:" +RemoveList(_entities,10,1000) +" Dic:" + RemoveDic(dic,10,1000));*/
             Debug.Log("Clear S:"+ClearSparseSet(ss)+" List:" +ClearList(_entities) + " Dic:"+ClearDic(dic));
-            Debug.Log(ss.Contains(50000));
+            Debug.Log(ss.Contains(500));
             
         }
 
@@ -96,9 +116,15 @@ namespace Box1.SparseSet
             _stopwatch.Reset();
             _stopwatch.Start();
             int sum = 0;
-            foreach (var v in s)
+            /*foreach (var v in s)
             {
                 sum += v.id;
+            }*/
+            //枚举器到底有啥问题,速度起码慢三倍
+            var d = s.Density;
+            for (int i = 0; i < s.Count; i++)
+            {
+                sum += d[i].id;
             }
             _stopwatch.Stop();
             return _stopwatch.ElapsedTicks;
@@ -142,9 +168,15 @@ namespace Box1.SparseSet
             _stopwatch.Reset();
             _stopwatch.Start();
             int sum = 0;
-            foreach (var v in e)
+            /*foreach (var v in e)
             {
                 sum += v.id;
+            }*/
+
+            int count = e.Count;
+            for (int i = 0; i < count; i++)
+            {
+                sum += e[i].id;
             }
             _stopwatch.Stop();
             return _stopwatch.ElapsedTicks;
