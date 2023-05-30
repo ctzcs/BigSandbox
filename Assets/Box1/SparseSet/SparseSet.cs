@@ -42,9 +42,9 @@ namespace Box1.SparseSet
             {
                 return;
             }
-
-            _density[_count++] = item;
             _sparse[id] = _count;
+            _density[_count++] = item;
+
         }
 
         public void Clear()

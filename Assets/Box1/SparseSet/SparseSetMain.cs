@@ -22,7 +22,7 @@ namespace Box1.SparseSet
     /// </summary>
     public class SparseSetMain : MonoBehaviour
     {
-        private const int testNums = 10000;
+        private const int testNums = 20000;
         private List<Entity> _entities = new List<Entity>(testNums);
         SparseSet<Entity> ss = new SparseSet<Entity>(testNums, testNums);
         private Dictionary<int, Entity> dic = new Dictionary<int, Entity>(testNums);
@@ -61,11 +61,11 @@ namespace Box1.SparseSet
             Debug.Log("s:" + s);
             Debug.Log("dic:" +d);
             Debug.Log("Traverse S:"+TraverseSparseSet(ss)+" List:" +TraverseSList(_entities) + " Dic:" + TraverseDic(dic));
-            /*Debug.Log("Contains S:"+ContainsSparse(ss,10,100) + " Dic:"+ ContainsDic(dic,10,100));
-            Debug.Log("Remove S:"+RemoveSparseSet(ss,10,1000)+" List:" +RemoveList(_entities,10,1000) +" Dic:" + RemoveDic(dic,10,1000));*/
-            Debug.Log("Clear S:"+ClearSparseSet(ss)+" List:" +ClearList(_entities) + " Dic:"+ClearDic(dic));
+            Debug.Log("Contains S:"+ContainsSparse(ss,100,1000) + " Dic:"+ ContainsDic(dic,100,1000));
+            Debug.Log("Remove S:"+RemoveSparseSet(ss,1000,10000)+" List:" +RemoveList(_entities,1000,10000) +" Dic:" + RemoveDic(dic,1000,10000));
             Debug.Log(ss.Contains(500));
-            
+            Debug.Log("Clear S:"+ClearSparseSet(ss)+" List:" +ClearList(_entities) + " Dic:"+ClearDic(dic));
+   
         }
 
         long TraverseDic(Dictionary<int,Entity> dic)
