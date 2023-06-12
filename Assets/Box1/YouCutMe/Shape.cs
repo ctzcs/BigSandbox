@@ -1,0 +1,215 @@
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using UnityEditor.Rendering;
+using UnityEditor.U2D;
+using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
+
+namespace Box1.YouCutMe
+{
+    public enum EShape
+    {
+        Red,
+        White
+    }
+    public class Shape : MonoBehaviour
+    {
+        
+        #region public
+
+        public MeshFilter Filter => _filter;
+        public MeshRenderer Renderer => _renderer;
+        public Transform Trans => transform;
+        #endregion
+        private MeshFilter _filter;
+        private MeshRenderer _renderer;
+        [SerializeField]
+        private EShape shape;
+        private static readonly int Color1 = Shader.PropertyToID("_BaseColor");
+        private MaterialPropertyBlock _block;
+        
+        
+        // Start is called before the first frame update
+        void Start()
+        {
+            Init();
+            //这里也说明我们应该提前加载配置，然后再进入逻辑.
+            if (shape == EShape.Red)
+            {
+                SetColor(new Color32(255,0,0,255));   
+            }
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            if (Input.GetMouseButtonUp(0))
+            {
+                var point = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                var info = Physics2D.Raycast(point, Vector3.zero);
+                
+                if (info.transform != this.transform)
+                {
+                    Shape s;
+                    bool success = info.transform.TryGetComponent(out s);
+                    if (success)
+                    {
+                        Debug.Log(shape + ":Successful!");
+                        CutBy(s);
+                    }
+                     
+                }
+                
+            }
+        }
+
+        void Init()
+        {
+            TryGetComponent(out _renderer);
+            TryGetComponent(out _filter);
+            _block = new MaterialPropertyBlock();
+        }
+        
+        void SetShape(EShape shape)
+        {
+            this.shape = shape;
+        }
+
+        void SetColor(Color32 color)
+        {
+            _block.SetColor(Color1,color);
+            _renderer.SetPropertyBlock(_block);
+        }
+
+        public void CutBy(Shape other)
+        {
+            Dictionary<int,Vector3> pointsInOther = new Dictionary<int, Vector3>();
+            //1. 找本图形到在另外一个shape中的点，存到list中
+            Vector3[] vertices = _filter.mesh.vertices;
+            List<Vector3> sortVertices = SortRound(vertices);
+            for (int i = 0; i < sortVertices.Count; i++)
+            {
+                var worldPoint = transform.TransformPoint(vertices[i]);
+                worldPoint.z = 0;
+                if (ContainsPoint(worldPoint,other))
+                {
+                    Debug.Log($"找到一个{worldPoint}");
+                    pointsInOther.Add(i,worldPoint);
+                }
+            }
+            
+            //2. 从点发射射线，与另外一个形状求交点
+            List<Vector3> points = new List<Vector3>();
+            
+            foreach (KeyValuePair<int,Vector3> pair in pointsInOther)
+            {
+                Debug.Log($"在形状内{pair.Value}");
+                int pre = pair.Key == 0 ? sortVertices.Count - 1:pair.Key - 1;
+                int next = pair.Key == sortVertices.Count - 1 ? 0:pair.Key + 1;
+                
+                RaycastHit2D[] info1 = new RaycastHit2D[10];
+                RaycastHit2D[] info2 = new RaycastHit2D[10];
+                int num1 = Physics2D.LinecastNonAlloc(sortVertices[pre],pair.Value ,info1);
+                for (int i = 0; i < num1; i++)
+                {
+                    points.Add(info1[i].point);
+                }
+                int num2 = Physics2D.LinecastNonAlloc(sortVertices[next],pair.Value, info2);
+                for (int i = 0; i < num2; i++)
+                {
+                    points.Add(info2[i].point);
+                }
+            }
+            
+            for (int i = 0; i < points.Count; i++)
+            {
+                Debug.Log($"交点{points[i]}");
+            }
+        }
+
+        /// <summary>
+        /// 传入世界坐标系的点
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="mesh"></param>
+        /// <returns></returns>
+        public static bool ContainsPoint(Vector3 point,Shape s)
+        {
+            Mesh mesh = s.Filter.mesh;
+            Vector3 localPoint = s.Trans.InverseTransformPoint(point);
+            Vector3[] vertices = mesh.vertices;
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                vertices[i].z = 0;
+            }
+
+            List<Vector3> verticesList =  SortRound(vertices);
+            
+            for (int i = 0; i < verticesList.Count ; i++)
+            {
+                int next = i + 1;
+                if (i == verticesList.Count - 1 )
+                {
+                    next = 0;
+                }
+                Vector3 line = verticesList[next] - verticesList[i];
+                Vector3 line2 = localPoint - verticesList[i];
+                Vector3 value = Vector3.Cross(line,line2 );
+                if (value.z > 0)//注意，根据左手法则，顺时针捏过去，如果大于0说明在左边，这里和xz平面不一样
+                {
+                    return false;
+                }
+            }
+            Debug.Log($"点{point}在颜色{s.shape}内");
+            return true;
+        }
+
+
+        public static List<Vector3> SortRound(Vector3[] vertices)
+        {
+            Vector3 min = vertices[0];
+            int index = 0;
+            for (int i = 1; i < vertices.Length; i++)
+            {
+                if (vertices[i].x < min.x)
+                {
+                    min = vertices[i];
+                    index = i;
+                }else if ( Mathf.Abs(vertices[i].x - min.x) < 1e-10 && vertices[i].y < min.y )
+                {
+                    min = vertices[i];
+                    index = i;
+                }
+            }
+
+            List<Vector3> list = new List<Vector3>(vertices.Length);
+            list.Add(min);
+            for (int i = 0; i < list.Capacity; i++)
+            {
+                if (i == index)
+                {
+                    continue;
+                }
+                list.Add(vertices[i]);
+            }
+            list.Sort((a,b) =>
+            {
+                if (b == min)
+                {
+                    return 0;
+                }
+                var aCos = Vector3.Dot((a - min).normalized, Vector3.up);
+                var bCos = Vector3.Dot((b - min).normalized, Vector3.up);
+                if (aCos > bCos)
+                {
+                    return -1;
+                }
+                else return 1;
+            });
+            return list;
+        }
+    }
+}
