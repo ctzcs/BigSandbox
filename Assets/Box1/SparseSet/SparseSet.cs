@@ -5,14 +5,14 @@ namespace Box1.SparseSet
 {
     public class Entity
     {
-        public int id;
+        public int id { get; }
 
         public Entity(int i)
         {
             id = i;
         }
     }
-    public class SparseSet<T>:ICollection<T> where T: Entity
+    public class SparseSet<T>:ICollection<T> where T:Entity
     {
         private int[] _sparse;
         private T[] _density;
@@ -44,20 +44,25 @@ namespace Box1.SparseSet
             }
             _sparse[id] = _count;
             _density[_count++] = item;
-
         }
+        
 
         public void Clear()
         {
             _count = 0;
         }
 
+        /// <summary>
+        /// 非泛型方法，不建议使用
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public bool Contains(T item)
         {
             var id = item.id;
             return Contains(id);
         }
-
+        
         public bool Contains(int id)
         {
             if (id >= _maxValue)
@@ -72,6 +77,11 @@ namespace Box1.SparseSet
             return false;
         }
 
+        public bool Contains<TItem>(TItem item) where TItem:Entity
+        {
+            var id = item.id;
+            return Contains(id);
+        }
         public void CopyTo(T[] array, int arrayIndex)
         {
             throw new System.NotImplementedException();
@@ -94,7 +104,18 @@ namespace Box1.SparseSet
             _sparse[_density[densityId].id] = densityId;
             return true;
         }
-        
+
+        /// <summary>
+        /// 泛型方法，避免装箱
+        /// </summary>
+        /// <param name="item"></param>
+        /// <typeparam name="TItem"></typeparam>
+        /// <returns></returns>
+        public bool Remove<TItem>(TItem item) where TItem:Entity
+        {
+            int id = item.id;
+            return Remove(id);
+        }
 
         public IEnumerator<T> GetEnumerator()
         {

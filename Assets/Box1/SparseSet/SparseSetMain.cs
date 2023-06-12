@@ -22,7 +22,7 @@ namespace Box1.SparseSet
     /// </summary>
     public class SparseSetMain : MonoBehaviour
     {
-        private const int testNums = 20000;
+        private const int testNums = 2000000;
         private List<Entity> _entities = new List<Entity>(testNums);
         SparseSet<Entity> ss = new SparseSet<Entity>(testNums, testNums);
         private Dictionary<int, Entity> dic = new Dictionary<int, Entity>(testNums);
@@ -34,6 +34,7 @@ namespace Box1.SparseSet
             _stopwatch = new Stopwatch();
             long l = 0;
             long s = 0;
+            long st = 0;
             long d = 0;
             for (int i = 0; i < testNums; i++)
             {
