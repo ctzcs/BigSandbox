@@ -1,0 +1,10 @@
+C:\Users\Administrator\Downloads\Clipper2-Clipper2_1.2.2\Clipper2-Clipper2_1.2.2\CSharp\Clipper2Lib\obj\Debug\netstandard2.0\Clipper2Lib.csproj.AssemblyReference.cache
+C:\Users\Administrator\Downloads\Clipper2-Clipper2_1.2.2\Clipper2-Clipper2_1.2.2\CSharp\Clipper2Lib\obj\Debug\netstandard2.0\Clipper2Lib.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Administrator\Downloads\Clipper2-Clipper2_1.2.2\Clipper2-Clipper2_1.2.2\CSharp\Clipper2Lib\bin\Debug\netstandard2.0\Clipper2Lib.deps.json
+C:\Users\Administrator\Downloads\Clipper2-Clipper2_1.2.2\Clipper2-Clipper2_1.2.2\CSharp\Clipper2Lib\bin\Debug\netstandard2.0\Clipper2Lib.dll
+C:\Users\Administrator\Downloads\Clipper2-Clipper2_1.2.2\Clipper2-Clipper2_1.2.2\CSharp\Clipper2Lib\bin\Debug\netstandard2.0\Clipper2Lib.pdb
+C:\Users\Administrator\Downloads\Clipper2-Clipper2_1.2.2\Clipper2-Clipper2_1.2.2\CSharp\Clipper2Lib\obj\Debug\netstandard2.0\Clipper2Lib.AssemblyInfoInputs.cache
+C:\Users\Administrator\Downloads\Clipper2-Clipper2_1.2.2\Clipper2-Clipper2_1.2.2\CSharp\Clipper2Lib\obj\Debug\netstandard2.0\Clipper2Lib.AssemblyInfo.cs
+C:\Users\Administrator\Downloads\Clipper2-Clipper2_1.2.2\Clipper2-Clipper2_1.2.2\CSharp\Clipper2Lib\obj\Debug\netstandard2.0\Clipper2Lib.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Downloads\Clipper2-Clipper2_1.2.2\Clipper2-Clipper2_1.2.2\CSharp\Clipper2Lib\obj\Debug\netstandard2.0\Clipper2Lib.dll
+C:\Users\Administrator\Downloads\Clipper2-Clipper2_1.2.2\Clipper2-Clipper2_1.2.2\CSharp\Clipper2Lib\obj\Debug\netstandard2.0\Clipper2Lib.pdb

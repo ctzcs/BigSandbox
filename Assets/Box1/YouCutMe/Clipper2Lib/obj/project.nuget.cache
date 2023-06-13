@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "RDOt4IpdBlj4HfFjV3MpLj0SrjYqsyFQa2VCcOb6gKEkZ5g1dyDJsHBRPnqpWOUgk/StW6Wse0oERsU9NNKEbg==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Administrator\\Downloads\\Clipper2-Clipper2_1.2.2\\Clipper2-Clipper2_1.2.2\\CSharp\\Clipper2Lib\\Clipper2Lib.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

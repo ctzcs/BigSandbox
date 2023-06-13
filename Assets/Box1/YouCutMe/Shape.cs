@@ -1,7 +1,11 @@
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Clipper2Lib;
+using Unity.Mathematics;
 using UnityEditor.Rendering;
 using UnityEditor.U2D;
 using UnityEngine;
@@ -58,7 +62,9 @@ namespace Box1.YouCutMe
                     if (success)
                     {
                         Debug.Log(shape + ":Successful!");
-                        CutBy(s);
+                        /*CutBy(s);*/
+                        PathsD pathsD = Difference(this,s);
+                        this.Filter.mesh = PathDToMesh(pathsD, this);
                     }
                      
                 }
@@ -211,5 +217,127 @@ namespace Box1.YouCutMe
             });
             return list;
         }
+        
+        
+        #region Clipper
+
+        public static PathsD Difference(Shape me,Shape you)
+        {
+            
+            PathsD subject = new PathsD();
+            /*PathD subPath = new PathD();*/
+            Mesh meMesh = me.Filter.mesh;
+            Vector3[] meVertices = meMesh.vertices;
+            int[] triangles = meMesh.triangles;
+            for (int i = 0; i < triangles.Length/3; i++)
+            {
+                int index = i * 3;
+                PathD triangle = new PathD();
+                for (int j = index; j < index+3; j++)
+                {
+                    Vector3 worldPos = me.Trans.TransformPoint(meVertices[triangles[j]]);
+                    PointD pointD = new PointD(worldPos.x,worldPos.y) ;
+                    triangle.Add(pointD);
+                }
+                subject.Add(triangle);
+            }
+            
+            
+            /*for (int i = 0; i < meVertices.Length ; i++)
+            {
+                Vector3 worldPos = me.Trans.TransformPoint(meVertices[i]);
+                PointD pointD = new PointD(worldPos.x,worldPos.y) ;
+                subPath.Add(pointD);
+            }
+            subject.Add(subPath);*/
+            
+            PathsD clip = new PathsD();
+            /*PathD clipPath = new PathD();*/
+            /*Vector3[] youVertices = me.Filter.mesh.vertices;
+            for (int i = 0; i < meVertices.Length ; i++)
+            {
+                Vector3 worldPos = you.Trans.TransformPoint(youVertices[i]);
+                PointD pointD = new PointD(worldPos.x,worldPos.y) ;
+                clipPath.Add(pointD);
+            }
+            clip.Add(clipPath);*/
+            Mesh youMesh = you.Filter.mesh;
+            Vector3[] youVertices = youMesh.vertices;
+            int[] triangles2 = youMesh.triangles;
+            for (int i = 0; i < triangles2.Length/3; i++)
+            {
+                int index = i * 3;
+                PathD triangle = new PathD();
+                for (int j = index; j < index+3; j++)
+                {
+                    Vector3 worldPos = you.Trans.TransformPoint(youVertices[triangles2[j]]);
+                    PointD pointD = new PointD(worldPos.x,worldPos.y) ;
+                    triangle.Add(pointD);
+                }
+                clip.Add(triangle);
+            }
+            
+            PathsD paths = Clipper.Difference(subject, clip, FillRule.EvenOdd);
+            
+            Debug.Log(paths.ToString());
+            return paths;
+        }
+
+        public Mesh PathDToMesh(PathsD pathsD,Shape shape)
+        {
+            Transform trans = shape.Trans;
+            List<int> triangles = new List<int>();
+            for (int i = 0; i < pathsD.Count; i++)
+            {
+                PathD pathD = pathsD[i];
+                for (int j = 0 ; j < pathD.Count ; j+=3)
+                {
+                    int[] triangle;
+                    int remainPoint = pathD.Count - j;
+                    if (remainPoint >= 4)
+                    {
+                        triangle = new int[] { j,j+1,j+2, j,j+2,j+3};
+                    }else if (remainPoint == 3)
+                    {
+                        triangle = new int[] { j,j+1,j+2,  j,j+2,0};
+                    }else if (remainPoint == 2)
+                    {
+                        triangle = new int[] { j,j+1,0};
+                    }
+                    else
+                    {
+                        triangle = Array.Empty<int>();
+                    }
+
+                    if (triangle.Length > 0)
+                    {
+                        for (int k = 0; k < triangle.Length; k++)
+                        {
+                            triangles.Add(triangle[k]);
+                        }
+                    }
+
+                    PolyPathD p;
+                    
+                }
+            }
+
+            List<Vector3> vertices = new List<Vector3>();
+            for (int i = 0; i < pathsD.Count; i++)
+            {
+                PathD pathD = pathsD[i];
+                for (int j = pathD.Count - 1 ; j >= 0; j--)
+                {
+                    Vector3 localPoint = trans.InverseTransformPoint(new Vector3((float)pathD[j].x, (float)pathD[j].y, 0));
+                    vertices.Add(localPoint);
+                }
+            }
+
+            Mesh mesh = new Mesh();
+            mesh.vertices = vertices.ToArray();
+            mesh.triangles = triangles.ToArray();
+            return mesh;
+        }
+        #endregion
     }
 }
