@@ -1,16 +1,14 @@
 using System;
-using System.Collections.Concurrent;
+
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+
 using Clipper2Lib;
-using Unity.Mathematics;
-using UnityEditor.Rendering;
-using UnityEditor.U2D;
+
+using Poly2Tri;
+
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
+
+using Debug = UnityEngine.Debug;
 
 namespace Box1.YouCutMe
 {
@@ -23,7 +21,7 @@ namespace Box1.YouCutMe
     {
         
         #region public
-
+        
         public MeshFilter Filter => _filter;
         public MeshRenderer Renderer => _renderer;
         public Transform Trans => transform;
@@ -39,6 +37,7 @@ namespace Box1.YouCutMe
         // Start is called before the first frame update
         void Start()
         {
+            
             Init();
             //这里也说明我们应该提前加载配置，然后再进入逻辑.
             if (shape == EShape.Red)
@@ -64,7 +63,7 @@ namespace Box1.YouCutMe
                         Debug.Log(shape + ":Successful!");
                         /*CutBy(s);*/
                         PathsD pathsD = Difference(this,s);
-                        this.Filter.mesh = PathDToMesh(pathsD, this);
+                        this.Filter.mesh = PolygonToMesh(pathsD, this); //PathDToMesh(pathsD, this);
                     }
                      
                 }
@@ -174,6 +173,11 @@ namespace Box1.YouCutMe
         }
 
 
+        /// <summary>
+        /// 将顶点顺时针排序
+        /// </summary>
+        /// <param name="vertices"></param>
+        /// <returns></returns>
         public static List<Vector3> SortRound(Vector3[] vertices)
         {
             Vector3 min = vertices[0];
@@ -221,6 +225,12 @@ namespace Box1.YouCutMe
         
         #region Clipper
 
+        /// <summary>
+        /// 求异
+        /// </summary>
+        /// <param name="me"></param>
+        /// <param name="you"></param>
+        /// <returns></returns>
         public static PathsD Difference(Shape me,Shape you)
         {
             
@@ -283,9 +293,50 @@ namespace Box1.YouCutMe
             return paths;
         }
 
-        public Mesh PathDToMesh(PathsD pathsD,Shape shape)
+        public Mesh PolygonToMesh(PathsD pathsD,Shape s)
         {
-            Transform trans = shape.Trans;
+            Transform trans = s.Trans;
+            
+            List<PolygonPoint> points = new List<PolygonPoint>();
+            for (int i = 0; i < pathsD.Count; i++)
+            {
+                PathD pathD = pathsD[i];
+                for (int j = pathD.Count - 1 ; j >= 0; j--)
+                {
+                    Vector3 localPoint = trans.InverseTransformPoint(new Vector3((float)pathD[j].x, (float)pathD[j].y, 0));
+                    PolygonPoint point = new PolygonPoint(localPoint.x, localPoint.y);
+                    /*vertices.Add(localPoint);*/
+                    points.Add(point);
+                }
+            }
+
+            Polygon polygon = new Polygon(points.ToArray());
+            P2T.Triangulate(polygon);
+            List<Vector3> vertices = new List<Vector3>();
+            List<int> indices = new List<int>();
+            var triangles = polygon.Triangles;
+            for (int i = 0; i < triangles.Count; i++)
+            {
+                DelaunayTriangle triangle = triangles[i];
+                for (int j = 0; j < 3; j++)
+                {
+                    TriangulationPoint p = triangle.Points[j];
+                    Vector3 point = new Vector3((float)p.X, (float)p.Y, 0);
+                    vertices.Add(point);
+                    //由于库是求出的逆时针的三角形，所以需要倒着输入
+                    indices.Add(i*3+2-triangle.IndexOf(p));
+                }
+            }
+
+            Mesh mesh = new Mesh();
+            mesh.vertices = vertices.ToArray();
+            mesh.triangles = indices.ToArray();
+            return mesh;
+        }
+
+        public Mesh PathDToMesh(PathsD pathsD,Shape s)
+        {
+            Transform trans = s.Trans;
             List<int> triangles = new List<int>();
             for (int i = 0; i < pathsD.Count; i++)
             {
