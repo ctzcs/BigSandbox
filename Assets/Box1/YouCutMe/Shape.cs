@@ -324,7 +324,8 @@ namespace Box1.YouCutMe
                     Vector3 point = new Vector3((float)p.X, (float)p.Y, 0);
                     vertices.Add(point);
                     //由于库是求出的逆时针的三角形，所以需要倒着输入
-                    indices.Add(i*3+2-triangle.IndexOf(p));
+                    int index = i*3+2 - triangle.IndexOf(p);
+                    indices.Add(index);
                 }
             }
 
