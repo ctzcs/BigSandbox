@@ -16,7 +16,8 @@ namespace Box1.YouCutMe
     {
         Red,
         White,
-        Green
+        Green,
+        Black
     }
     public class Shape : MonoBehaviour
     {
@@ -48,10 +49,13 @@ namespace Box1.YouCutMe
                     SetColor(new Color32(255,0,0,255));  
                     break;
                 case EShape.Green:
-                    SetColor(new Color32(0,255,0,255));
+                    SetColor(new Color32(0,255,0,50));
                     break;
                 case EShape.White:
                     SetColor(new Color32(255,255,255,255));
+                    break;
+                case EShape.Black:
+                    SetColor(new Color32(0,0,0,255));
                     break;
                 default:
                     break;
@@ -483,6 +487,58 @@ namespace Box1.YouCutMe
             mesh.triangles = indices.ToArray();
             return mesh;
         }
+
+        public Mesh PolygonToMeshLes(PathsD pathsD,Shape s)
+        {
+            Transform trans = s.Trans;
+            List<float> inputData = new List<float>();
+            for (int i = 0; i < pathsD.Count; i++)
+            {
+                PathD pathD = pathsD[i];
+                for (int j = pathD.Count - 1 ; j >= 0; j--)
+                {
+                    Vector3 localPoint = trans.InverseTransformPoint(new Vector3((float)pathD[j].x, (float)pathD[j].y, 0));
+                    /*vertices.Add(localPoint);*/
+                    inputData.Add(localPoint.x);
+                    inputData.Add(localPoint.y);
+                    
+                }
+            }
+            int numPoints = inputData.Count / 2;
+            var contour = new LibTessDotNet.ContourVertex[numPoints];
+            var tess = new LibTessDotNet.Tess();
+            for (int i = 0; i < numPoints; i++)
+            {
+                // NOTE : Z is here for convenience if you want to keep a 3D vertex position throughout the tessellation process but only X and Y are important.
+                contour[i].Position = new LibTessDotNet.Vec3(inputData[i * 2], inputData[i * 2 + 1], 0);
+                // Data can contain any per-vertex data, here a constant color.
+                contour[i].Data = Color.black;
+            }
+            // Add the contour with a specific orientation, use "Original" if you want to keep the input orientation.
+            tess.AddContour(contour, LibTessDotNet.ContourOrientation.Clockwise);
+
+            // Tessellate!
+            // The winding rule determines how the different contours are combined together.
+            // See http://www.glprogramming.com/red/chapter11.html (section "Winding Numbers and Winding Rules") for more information.
+            // If you want triangles as output, you need to use "Polygons" type as output and 3 vertices per polygon.
+            tess.Tessellate(LibTessDotNet.WindingRule.EvenOdd, LibTessDotNet.ElementType.Polygons, 3);
+            Mesh mesh = new Mesh();
+            Vector3[] vertices = new Vector3[3*tess.ElementCount];
+            int[] indices = new int[3*tess.ElementCount];
+            for (int i = 0; i < tess.ElementCount; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    var vertex = tess.Elements[i*3];
+                    vertices[3*i+j] = new Vector3(tess.Vertices[tess.Elements[i*3+j]].Position.X, tess.Vertices[tess.Elements[i*3+j]].Position.Y,0);
+                    indices[3*i+j] = 3*i+j;
+                }
+            }
+            mesh.vertices = vertices;
+            mesh.triangles = indices;
+            return mesh;
+        }
+
         #endregion
     }
 }
