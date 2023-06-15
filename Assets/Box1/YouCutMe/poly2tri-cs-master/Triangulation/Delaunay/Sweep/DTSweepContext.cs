@@ -73,7 +73,7 @@ namespace Poly2Tri {
 			//        triangle.clearNeighbors();
 		}
 
-		public void MeshClean( DelaunayTriangle triangle ) {
+		/*public void MeshClean( DelaunayTriangle triangle ) {
 			MeshCleanReq(triangle);
 		}
 
@@ -86,6 +86,32 @@ namespace Poly2Tri {
 				if (!triangle.EdgeIsConstrained[i])
 				{
 					MeshCleanReq(triangle.Neighbors[i]);
+				}
+			}
+		}*/
+		//这里注释掉的方法会导致栈溢出。
+		public void MeshClean(DelaunayTriangle triangle)
+		{
+			MeshCleanReqNoStack(triangle);
+		}
+		private void MeshCleanReqNoStack(DelaunayTriangle triangle)
+		{
+			var stack = new System.Collections.Generic.Stack <DelaunayTriangle>();
+			stack.Push(triangle);
+			while (stack.Count > 0)
+			{
+				var t = stack.Pop();
+				if (t != null && !t.IsInterior)
+				{
+					t.IsInterior = true;
+					Triangulatable.AddTriangle(t);
+					for (int i = 0; i < 3; i++)
+					{
+						if (!t.EdgeIsConstrained[i])
+						{
+							stack.Push(t.Neighbors[i]);
+						}
+					}
 				}
 			}
 		}

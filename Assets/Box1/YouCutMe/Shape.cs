@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 
 using Clipper2Lib;
-
+using Cysharp.Threading.Tasks.Triggers;
 using Poly2Tri;
 
 using UnityEngine;
@@ -15,7 +15,8 @@ namespace Box1.YouCutMe
     public enum EShape
     {
         Red,
-        White
+        White,
+        Green
     }
     public class Shape : MonoBehaviour
     {
@@ -32,7 +33,8 @@ namespace Box1.YouCutMe
         private EShape shape;
         private static readonly int Color1 = Shader.PropertyToID("_BaseColor");
         private MaterialPropertyBlock _block;
-        
+        public Shape you;
+        public Shape me;
         
         // Start is called before the first frame update
         void Start()
@@ -40,14 +42,44 @@ namespace Box1.YouCutMe
             
             Init();
             //这里也说明我们应该提前加载配置，然后再进入逻辑.
-            if (shape == EShape.Red)
+            switch (shape)
             {
-                SetColor(new Color32(255,0,0,255));   
+                case EShape.Red:
+                    SetColor(new Color32(255,0,0,255));  
+                    break;
+                case EShape.Green:
+                    SetColor(new Color32(0,255,0,255));
+                    break;
+                case EShape.White:
+                    SetColor(new Color32(255,255,255,255));
+                    break;
+                default:
+                    break;
             }
         }
 
         // Update is called once per frame
         void Update()
+        {
+            if (shape == EShape.Green)
+            {
+                UnionShow();
+            }
+            else
+            {
+                CutObj();
+            }
+            
+        }
+
+        void Init()
+        {
+            TryGetComponent(out _renderer);
+            TryGetComponent(out _filter);
+            _block = new MaterialPropertyBlock();
+        }
+
+        void CutObj()
         {
             if (Input.GetMouseButtonUp(0))
             {
@@ -58,7 +90,7 @@ namespace Box1.YouCutMe
                 {
                     Shape s;
                     bool success = info.transform.TryGetComponent(out s);
-                    if (success)
+                    if (success&& s.shape != EShape.Green)
                     {
                         Debug.Log(shape + ":Successful!");
                         /*CutBy(s);*/
@@ -71,11 +103,33 @@ namespace Box1.YouCutMe
             }
         }
 
-        void Init()
+        void UnionShow()
         {
-            TryGetComponent(out _renderer);
-            TryGetComponent(out _filter);
-            _block = new MaterialPropertyBlock();
+            PathsD pathsD = InterSect(you,me);
+            if (pathsD.Count <= 0)
+            {
+                this._renderer.enabled = false;
+            }
+            else
+            {
+                this.Filter.mesh = PolygonToMesh(pathsD, this);
+                
+                this._renderer.enabled = true;
+            }
+            
+            /*var point = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            var info = Physics2D.Raycast(point, Vector3.zero);
+                
+            if (info.transform != this.transform)
+            {
+                Shape s;
+                bool success = info.transform.TryGetComponent(out s);
+                if (success)
+                {
+                     //PathDToMesh(pathsD, this);
+                }
+                     
+            }*/
         }
         
         void SetShape(EShape shape)
@@ -248,6 +302,12 @@ namespace Box1.YouCutMe
                     Vector3 worldPos = me.Trans.TransformPoint(meVertices[triangles[j]]);
                     PointD pointD = new PointD(worldPos.x,worldPos.y) ;
                     triangle.Add(pointD);
+                    if (j == index + 2)
+                    {
+                        Vector3 worldPos1 = me.Trans.TransformPoint(meVertices[triangles[index]]);
+                        PointD pointD1 = new PointD(worldPos.x,worldPos.y) ;
+                        triangle.Add(pointD1);
+                    }
                 }
                 subject.Add(triangle);
             }
@@ -283,6 +343,13 @@ namespace Box1.YouCutMe
                     Vector3 worldPos = you.Trans.TransformPoint(youVertices[triangles2[j]]);
                     PointD pointD = new PointD(worldPos.x,worldPos.y) ;
                     triangle.Add(pointD);
+                    //增加闭合
+                    if (j == index + 2)
+                    {
+                        Vector3 worldPos1 = you.Trans.TransformPoint(youVertices[triangles2[index]]);
+                        PointD pointD1 = new PointD(worldPos.x,worldPos.y) ;
+                        triangle.Add(pointD1);
+                    }
                 }
                 clip.Add(triangle);
             }
@@ -292,11 +359,92 @@ namespace Box1.YouCutMe
             Debug.Log(paths.ToString());
             return paths;
         }
+        public static PathsD InterSect(Shape me,Shape you)
+        {
+            
+            PathsD subject = new PathsD();
+            /*PathD subPath = new PathD();*/
+            Mesh meMesh = me.Filter.mesh;
+            Vector3[] meVertices = meMesh.vertices;
+            int[] triangles = meMesh.triangles;
+            for (int i = 0; i < triangles.Length/3; i++)
+            {
+                int index = i * 3;
+                PathD triangle = new PathD();
+                for (int j = index; j < index+3; j++)
+                {
+                    Vector3 worldPos = me.Trans.TransformPoint(meVertices[triangles[j]]);
+                    PointD pointD = new PointD(worldPos.x,worldPos.y) ;
+                    triangle.Add(pointD);
+                    if (j == index + 2)
+                    {
+                        Vector3 worldPos1 = me.Trans.TransformPoint(meVertices[triangles[index]]);
+                        PointD pointD1 = new PointD(worldPos.x,worldPos.y) ;
+                        triangle.Add(pointD1);
+                    }
+                }
+                subject.Add(triangle);
+            }
+            
+            
+            /*for (int i = 0; i < meVertices.Length ; i++)
+            {
+                Vector3 worldPos = me.Trans.TransformPoint(meVertices[i]);
+                PointD pointD = new PointD(worldPos.x,worldPos.y) ;
+                subPath.Add(pointD);
+            }
+            subject.Add(subPath);*/
+            
+            PathsD clip = new PathsD();
+            /*PathD clipPath = new PathD();*/
+            /*Vector3[] youVertices = me.Filter.mesh.vertices;
+            for (int i = 0; i < meVertices.Length ; i++)
+            {
+                Vector3 worldPos = you.Trans.TransformPoint(youVertices[i]);
+                PointD pointD = new PointD(worldPos.x,worldPos.y) ;
+                clipPath.Add(pointD);
+            }
+            clip.Add(clipPath);*/
+            Mesh youMesh = you.Filter.mesh;
+            Vector3[] youVertices = youMesh.vertices;
+            int[] triangles2 = youMesh.triangles;
+            for (int i = 0; i < triangles2.Length/3; i++)
+            {
+                int index = i * 3;
+                PathD triangle = new PathD();
+                for (int j = index; j < index+3; j++)
+                {
+                    Vector3 worldPos = you.Trans.TransformPoint(youVertices[triangles2[j]]);
+                    PointD pointD = new PointD(worldPos.x,worldPos.y) ;
+                    triangle.Add(pointD);
+                    //增加闭合
+                    if (j == index + 2)
+                    {
+                        Vector3 worldPos1 = you.Trans.TransformPoint(youVertices[triangles2[index]]);
+                        PointD pointD1 = new PointD(worldPos.x,worldPos.y) ;
+                        triangle.Add(pointD1);
+                    }
+                }
+                clip.Add(triangle);
+            }
+            
+            PathsD paths = Clipper.Intersect(subject, clip, FillRule.EvenOdd);
+            
+            /*Debug.Log(paths.ToString());*/
+            return paths;
+        }
 
+        /// <summary>
+        /// 使用Poly2Tri库完成三角剖分
+        /// 问题是当点有重合的时候，不支持
+        /// </summary>
+        /// <param name="pathsD"></param>
+        /// <param name="s"></param>
+        /// <returns></returns>
         public Mesh PolygonToMesh(PathsD pathsD,Shape s)
         {
             Transform trans = s.Trans;
-            
+            //输入多边形的点,因为是多边形默认是闭合的
             List<PolygonPoint> points = new List<PolygonPoint>();
             for (int i = 0; i < pathsD.Count; i++)
             {
@@ -307,6 +455,7 @@ namespace Box1.YouCutMe
                     PolygonPoint point = new PolygonPoint(localPoint.x, localPoint.y);
                     /*vertices.Add(localPoint);*/
                     points.Add(point);
+                    
                 }
             }
 
@@ -332,62 +481,6 @@ namespace Box1.YouCutMe
             Mesh mesh = new Mesh();
             mesh.vertices = vertices.ToArray();
             mesh.triangles = indices.ToArray();
-            return mesh;
-        }
-
-        public Mesh PathDToMesh(PathsD pathsD,Shape s)
-        {
-            Transform trans = s.Trans;
-            List<int> triangles = new List<int>();
-            for (int i = 0; i < pathsD.Count; i++)
-            {
-                PathD pathD = pathsD[i];
-                for (int j = 0 ; j < pathD.Count ; j+=3)
-                {
-                    int[] triangle;
-                    int remainPoint = pathD.Count - j;
-                    if (remainPoint >= 4)
-                    {
-                        triangle = new int[] { j,j+1,j+2, j,j+2,j+3};
-                    }else if (remainPoint == 3)
-                    {
-                        triangle = new int[] { j,j+1,j+2,  j,j+2,0};
-                    }else if (remainPoint == 2)
-                    {
-                        triangle = new int[] { j,j+1,0};
-                    }
-                    else
-                    {
-                        triangle = Array.Empty<int>();
-                    }
-
-                    if (triangle.Length > 0)
-                    {
-                        for (int k = 0; k < triangle.Length; k++)
-                        {
-                            triangles.Add(triangle[k]);
-                        }
-                    }
-
-                    PolyPathD p;
-                    
-                }
-            }
-
-            List<Vector3> vertices = new List<Vector3>();
-            for (int i = 0; i < pathsD.Count; i++)
-            {
-                PathD pathD = pathsD[i];
-                for (int j = pathD.Count - 1 ; j >= 0; j--)
-                {
-                    Vector3 localPoint = trans.InverseTransformPoint(new Vector3((float)pathD[j].x, (float)pathD[j].y, 0));
-                    vertices.Add(localPoint);
-                }
-            }
-
-            Mesh mesh = new Mesh();
-            mesh.vertices = vertices.ToArray();
-            mesh.triangles = triangles.ToArray();
             return mesh;
         }
         #endregion
