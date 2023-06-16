@@ -4,7 +4,7 @@ using UnityEditor;
 namespace Lean
 {
 	[CustomEditor(typeof(LeanPool))]
-	public class LeanPool_Editor : Editor
+	public class LeanPool_Editor : UnityEditor.Editor
 	{
 		[MenuItem("GameObject/Lean/Pool", false, 1)]
 		public static void CreateLocalization()
