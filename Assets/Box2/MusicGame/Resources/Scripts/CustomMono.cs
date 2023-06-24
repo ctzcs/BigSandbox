@@ -1,13 +1,15 @@
+using System.Collections;
 using UnityEngine;
 
-namespace Box2.PlayableAPI
+namespace Box2.MusicGame.Resources.Scripts
 {
-    public class PlayableAPI : MonoBehaviour
+    public class CustomMono : MonoBehaviour
     {
+
         // Start is called before the first frame update
         void Start()
         {
-            //Playable
+        
         }
 
         // Update is called once per frame

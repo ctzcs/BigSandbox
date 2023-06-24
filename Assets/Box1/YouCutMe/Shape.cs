@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Clipper2Lib;
 using Cysharp.Threading.Tasks.Triggers;
 using Poly2Tri;
-
+using Unity.VisualScripting;
 using UnityEngine;
 
 using Debug = UnityEngine.Debug;
@@ -99,7 +99,42 @@ namespace Box1.YouCutMe
                         Debug.Log(shape + ":Successful!");
                         /*CutBy(s);*/
                         PathsD pathsD = Difference(this,s);
-                        this.Filter.mesh = PolygonToMesh(pathsD, this); //PathDToMesh(pathsD, this);
+                        var meshes = PolygonToMeshes(pathsD, this);
+
+                        int childCount = this.Trans.childCount;
+                        for (int i = 0; i < meshes.Count; i++)
+                        {
+                            var mesh = meshes[i];
+                            GameObject go;
+                            if (i < childCount)
+                            {
+                                go = this.Trans.GetChild(i).gameObject;
+                            }
+                            else
+                            {
+                                go =new GameObject();
+                            }
+
+                            go.transform.parent = this.transform;
+                            go.transform.localPosition = Vector3.zero;
+                            go.transform.localScale = Vector3.one;
+                            go.transform.localRotation = Quaternion.identity;
+                            go.TryGetComponent<MeshFilter>(out MeshFilter mf);
+                            go.TryGetComponent<MeshRenderer>(out MeshRenderer mr);
+                            if (mf == null)
+                            {
+                                mf = go.gameObject.AddComponent<MeshFilter>();
+                            }
+
+                            if (mr == null)
+                            {
+                                mr = go.gameObject.AddComponent<MeshRenderer>();
+                            }
+                            mr.material = _renderer.material;
+                            mf.mesh = mesh;
+                        }
+                        
+                        //this.Filter.mesh = PolygonToMesh(pathsD,this); //PathDToMesh(pathsD, this);
                     }
                      
                 }
@@ -450,6 +485,7 @@ namespace Box1.YouCutMe
             Transform trans = s.Trans;
             //输入多边形的点,因为是多边形默认是闭合的
             List<PolygonPoint> points = new List<PolygonPoint>();
+            
             for (int i = 0; i < pathsD.Count; i++)
             {
                 PathD pathD = pathsD[i];
@@ -487,7 +523,56 @@ namespace Box1.YouCutMe
             mesh.triangles = indices.ToArray();
             return mesh;
         }
+        
+        public List<Mesh> PolygonToMeshes(PathsD pathsD,Shape s)
+        {
+            List<Mesh> meshes = new List<Mesh>();
+            Transform trans = s.Trans;
+            //输入多边形的点,因为是多边形默认是闭合的
+            List<PolygonPoint> points = new List<PolygonPoint>();
+            
+            for (int i = 0; i < pathsD.Count; i++)
+            {
+                PathD pathD = pathsD[i];
+                for (int j = pathD.Count - 1 ; j >= 0; j--)
+                {
+                    Vector3 localPoint = trans.InverseTransformPoint(new Vector3((float)pathD[j].x, (float)pathD[j].y, 0));
+                    PolygonPoint point = new PolygonPoint(localPoint.x, localPoint.y);
+                    /*vertices.Add(localPoint);*/
+                    points.Add(point);
+                    
+                }
+                
+                Polygon polygon = new Polygon(points.ToArray());
+                P2T.Triangulate(polygon);
+                List<Vector3> vertices = new List<Vector3>();
+                List<int> indices = new List<int>();
+                var triangles = polygon.Triangles;
+                for (int k = 0; k < triangles.Count; k++)
+                {
+                    DelaunayTriangle triangle = triangles[k];
+                    for (int q = 0; q < 3; q++)
+                    {
+                        TriangulationPoint p = triangle.Points[q];
+                        Vector3 point = new Vector3((float)p.X, (float)p.Y, 0);
+                        vertices.Add(point);
+                        //由于库是求出的逆时针的三角形，所以需要倒着输入
+                        int index = k*3+2 - triangle.IndexOf(p);
+                        indices.Add(index);
+                    }
+                }
+                Mesh mesh = new Mesh();
+                mesh.vertices = vertices.ToArray();
+                mesh.triangles = indices.ToArray();
+                meshes.Add(mesh);
+                points.Clear();
+                vertices.Clear();
+                indices.Clear();
+            }
 
+            return meshes;
+        }
+        
         public Mesh PolygonToMeshLes(PathsD pathsD,Shape s)
         {
             Transform trans = s.Trans;
