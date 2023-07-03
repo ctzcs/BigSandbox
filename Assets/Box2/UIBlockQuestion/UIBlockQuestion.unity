@@ -135,9 +135,10 @@ GameObject:
   - component: {fileID: 138957940}
   - component: {fileID: 138957939}
   - component: {fileID: 138957941}
+  - component: {fileID: 138957942}
   m_Layer: 5
   m_Name: Slot
-  m_TagString: Untagged
+  m_TagString: Slot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -211,6 +212,18 @@ SortingGroup:
   m_SortingLayerID: -1716733999
   m_SortingLayer: 2
   m_SortingOrder: 0
+--- !u!114 &138957942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 138957937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63669076fb8376640a64e69318ba59a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &569159158
 GameObject:
   m_ObjectHideFlags: 0

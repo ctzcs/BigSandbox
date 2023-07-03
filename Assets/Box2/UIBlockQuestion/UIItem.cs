@@ -15,7 +15,7 @@ namespace Box2.UIBlockQuestion
         private Vector3 _startPoint;
         private RectTransform _transform;
         public Canvas canvas;
-
+        
         private bool _isDrag = false;
         // Start is called before the first frame update
         void Start()
@@ -25,7 +25,7 @@ namespace Box2.UIBlockQuestion
         }
 
         // Update is called once per frame
-        void Update()
+        /*void Update()
         {
             if (_isDrag)
             {
@@ -36,11 +36,11 @@ namespace Box2.UIBlockQuestion
                     Input.mousePosition, canvas.worldCamera,out var localPosition);
                 _transform.anchoredPosition = localPosition;
             }
-        }
+        }*/
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            Debug.Log("drag");
+            Debug.Log("开始drag");
             if (_image != null)
             {
                 Debug.Log("正在拖拽");
@@ -48,13 +48,26 @@ namespace Box2.UIBlockQuestion
                 _isDrag = true;
                 _image.raycastTarget = false;
             }
-            Debug.Log(_image);
         }
 
         public void OnEndDrag(PointerEventData eventData)
         {
             _isDrag = false;
+            
+            //通过此信息可以获取当前射线碰撞到的物体
+            GameObject obj = eventData.pointerCurrentRaycast.gameObject;
+            if (!obj.CompareTag("Slot"))
+            {
+                _transform.anchoredPosition = _startPoint;
+            }
+            else
+            {
+                _transform.anchoredPosition = obj.transform.localPosition;
+            }
+            
             _image.raycastTarget = true;
+            
+            
         }
         /// <summary>
         /// 如果没有IDrag的话，OnBeginDrag也不会启用
@@ -62,12 +75,7 @@ namespace Box2.UIBlockQuestion
         /// <param name="eventData"></param>
         public void OnDrag(PointerEventData eventData)
         {
-            /*_transform.anchoredPosition += eventData.delta;*/
-            
-            
-            print($"封装的位置：{Input.mousePosition}    " + eventData.position);
-            
-            
+            _transform.anchoredPosition += eventData.delta;
         }
     }
 }
