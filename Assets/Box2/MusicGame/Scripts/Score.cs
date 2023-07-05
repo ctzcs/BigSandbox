@@ -1,18 +1,48 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using UnityEditor;
 
-public class Score : MonoBehaviour
+namespace Box2.MusicGame.Scripts
 {
-    // Start is called before the first frame update
-    void Start()
+    public class Score
     {
-        
+        private int _totalScore;
+        public int TotalScore => _totalScore;
+
+        private int _perfect = 3;
+        private int _good = 2;
+        private int _normal = 1;
+        private int _miss = 0;
+        public void AddScore(EScore eScore)
+        {
+            switch (eScore)
+            {
+               case EScore.Perfect:
+                   _totalScore += _perfect;
+                   break;
+               case EScore.Good:
+                   _totalScore += _good;
+                   break;
+               case  EScore.Normal:
+                   _totalScore += _normal;
+                   break;
+               case EScore.Miss:
+                   _totalScore += _miss;
+                   break;
+               default:
+                   return;
+            }
+        }
+        public void ShowScore(EScore eScore)
+        {
+            //调用导演，展示分数
+            //导演应该是在什么地方，显示什么图片
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public enum EScore
     {
-        
+        Perfect,
+        Good,
+        Normal,
+        Miss
     }
 }
