@@ -63,12 +63,7 @@ namespace Box2.MusicGame.Scripts
         /// 检查的时间点
         /// </summary>
         private float _fragmentPoint;
-        
-        /// <summary>
-        /// 检查的序列号
-        /// </summary>
-        private int _index;
-        
+
         /// <summary>
         /// 有没有被检查过,如果有一个按键判断成功了就代表这个按键被检查过了
         /// </summary>
@@ -77,6 +72,8 @@ namespace Box2.MusicGame.Scripts
         /// 应该播放的动画
         /// </summary>
         public AnimationClip animationClip;
+
+        public bool hasPlayed = false;
         /// <summary>
         /// 动画应该播放的速度
         /// </summary>
@@ -87,7 +84,9 @@ namespace Box2.MusicGame.Scripts
         public float fireEventTime;
         
         public float FragmentPoint => _fragmentPoint;
-        public int Index => _index;
+        
+        
+        
 
         public bool IsChecked
         {
@@ -95,15 +94,15 @@ namespace Box2.MusicGame.Scripts
             set => _isChecked = value;
         }
 
-        public Fragment(float fireEventTime,float fragmentPoint,int index,GameObject gameObject,AnimationClip clip = null,bool isChecked = false)
+        public Fragment(float fireEventTime,float fragmentPoint,GameObject gameObject,AnimationClip clip = null,bool isChecked = false)
         {
             this.fireEventTime = fireEventTime;
             _fragmentPoint = fragmentPoint;
-            _index = index;
             obj = gameObject;
             animationClip = clip;
             _isChecked = isChecked;
             speed = 1/(fragmentPoint - fireEventTime);
+            hasPlayed = false;
         }
         
         
