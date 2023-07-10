@@ -37,7 +37,8 @@ namespace Box2.MusicGame.Scripts
         /// 暂时都让三角形表演了，实际上应该实例化一个
         /// </summary>
         public GameObject tri;
-
+        private static readonly int TriFly = Animator.StringToHash("TriFly");
+        
         public GameObject sfx;
 
         public Text text;
@@ -136,13 +137,15 @@ namespace Box2.MusicGame.Scripts
                     //让导演安排动画表演
                     Animator anim = tri.GetComponent<Animator>();
                     anim.speed = nowFragment.speed;
-                    anim.SetTrigger("TriFly");
-                    /*Animation anim = tri.GetComponent<Animation>();
-                    //其实应该播放动画的名字
-                    anim.Play("TriFly");*/
+                    anim.SetTrigger(TriFly);
                     nowFragment.hasPlayed = true;
                     Debug.Log("Fire" + _realElapsedTime);
-                    
+                    /*var state = anim.GetCurrentAnimatorStateInfo(0);
+                    if (Mathf.Approximately(state.normalizedTime,1))
+                    {
+                        anim.Play("Idle");
+                    }*/
+
                 }
                 
                 
@@ -188,6 +191,8 @@ namespace Box2.MusicGame.Scripts
         #region 音效
 
         public AudioClip[] clips;
+        
+
         public void PlaySfx(AudioClip clip)
         {
             sfx.GetComponent<AudioSource>().PlayOneShot(clip);
