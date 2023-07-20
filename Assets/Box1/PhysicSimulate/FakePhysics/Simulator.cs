@@ -7,12 +7,13 @@ namespace Box1.PhysicSimulate.FakePhysics
 {
     public class Simulator : MonoBehaviour
     {
-        private List<Ctrl> _bodys = new List<Ctrl>(100);
+        private List<Ctrl> _bodys = new List<Ctrl>(20);
 
-        private readonly float _fixedDeltaTime = 0.02f;
+        private readonly float _fixedDeltaTime = 0.05f;
 
         private float _elaTime = 0;
         private static Simulator _i;
+        private bool _openSimulate = false;
 
         public static Simulator I
         {
@@ -37,7 +38,15 @@ namespace Box1.PhysicSimulate.FakePhysics
         // Update is called once per frame
         void Update()
         {
-            MyUpdate();
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                _openSimulate = !_openSimulate;
+            }
+            if (_openSimulate)
+            {
+                MyUpdate();
+            }
+            
         }
 
         void MyUpdate()
@@ -62,8 +71,8 @@ namespace Box1.PhysicSimulate.FakePhysics
                     var bt = _bodys[j].trans;
                     while (Shape.CheckCol(a,at,b,bt))
                     {
-                        a.PhysicsEffect(at,b,1,_fixedDeltaTime);
-                        b.PhysicsEffect(bt,a,1,_fixedDeltaTime);
+                        Shape.PhysicsEffect(a,at,b,bt,1,_fixedDeltaTime);
+                        Shape.PhysicsEffect(b,bt,a,at,1,_fixedDeltaTime);
                     }
                 }
             }

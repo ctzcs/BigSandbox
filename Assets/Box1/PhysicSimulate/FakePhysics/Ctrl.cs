@@ -20,7 +20,7 @@ namespace Box1.PhysicSimulate.FakePhysics
             var aWorldCentre = at.TransformPoint(a.centre);
             var bWorldCentre = bt.TransformPoint(b.centre);
             float distance = Vector3.Distance(aWorldCentre, bWorldCentre);
-            if (distance < a.radius + b.radius)
+            if (distance <= a.radius + b.radius)
             {
                 return true;
             }
@@ -31,16 +31,14 @@ namespace Box1.PhysicSimulate.FakePhysics
         /// <summary>
         /// 如果质量为0，默认为1
         /// </summary>
-        /// <param name="me"></param>
-        /// <param name="other"></param>
-        /// <param name="mass"></param>
-        /// <param name="deltaTime"></param>
-        public void PhysicsEffect(Transform me,Shape other,int mass,float deltaTime)
+        public static void PhysicsEffect(Shape a,Transform at,Shape b,Transform bt,int mass,float deltaTime)
         {
-            Vector3 dir = this.centre - other.centre;
+            var aWorldCentre = at.TransformPoint(a.centre);
+            var bWorldCentre = bt.TransformPoint(b.centre);
+            Vector3 dir = aWorldCentre - bWorldCentre;
             mass = mass == 0 ? 1 : mass;
-            var dirs = dir * (deltaTime * 1) / mass;
-            me.transform.position += dirs;
+            var dirs = dir * (deltaTime * 1)/ mass;
+            at.position += dirs;
         }
     }
     
@@ -53,7 +51,7 @@ namespace Box1.PhysicSimulate.FakePhysics
         private void Start()
         {
             TryGetComponent(out trans);
-            shape = new Shape(trans.position, 1);
+            shape = new Shape(Vector3.zero, 0.5f);
             Simulator.I.BodyRegister(this);
         }
     }
