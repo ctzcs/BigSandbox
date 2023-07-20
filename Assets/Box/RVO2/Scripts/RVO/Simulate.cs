@@ -30,14 +30,13 @@
  * <http://gamma.cs.unc.edu/RVO2/>
  */
 
-using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
+using RVO;
+using Vector2 = RVO.Vector2;
 
-namespace RVO
+namespace RVO2.Scripts.RVO
 {
     /**
      * <summary>碰撞模拟类</summary>
@@ -114,7 +113,7 @@ namespace RVO
         internal IDictionary<int, int> index2agentNoDict_;//index的id转agent的id
         internal IList<Agent> agents_;
         internal IList<Obstacle> obstacles_;
-        internal KdTree kdTree_;
+        internal global::RVO.KdTree kdTree_;
         internal float timeStep_;
 
         private static Simulator instance_ = new Simulator();
@@ -333,7 +332,7 @@ namespace RVO
             agentNo2indexDict_ = new Dictionary<int, int>();
             index2agentNoDict_ = new Dictionary<int, int>();
             defaultAgent_ = null;
-            kdTree_ = new KdTree();
+            kdTree_ = new global::RVO.KdTree();
             obstacles_ = new List<Obstacle>();
             globalTime_ = 0.0f;
             timeStep_ = 0.1f;

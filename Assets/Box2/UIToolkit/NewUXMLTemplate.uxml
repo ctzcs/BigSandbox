@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement style="height: 106px; width: 360px; align-items: auto; justify-content: flex-end; background-color: rgb(217, 103, 103);">
+        <ui:GroupBox style="height: 99px; width: 165px; left: 0; position: absolute; top: 0; right: auto; background-color: rgb(255, 255, 255);" />
+        <ui:GroupBox style="height: 96px; width: 162px; position: relative; top: 0; left: auto; justify-content: flex-start; align-items: auto; transform-origin: center; right: 0; background-color: rgb(255, 255, 255);" />
+    </ui:VisualElement>
+    <ui:GroupBox name="groupbox3" style="height: 59px; width: 356px; flex-direction: column; align-items: flex-start; justify-content: center;">
+        <ui:Label text="Label" display-tooltip-when-elided="true" name="label2" style="background-color: rgba(255, 255, 255, 255);" />
+    </ui:GroupBox>
+    <ui:Button text="btn" display-tooltip-when-elided="true" view-data-key="button" name="button" style="height: 29px; width: 78px; -unity-text-align: upper-center; white-space: nowrap;" />
+    <ui:Label text="dadaasdad" display-tooltip-when-elided="true" name="label" style="height: 63px; width: 359px; background-color: rgb(255, 255, 255);" />
+</ui:UXML>

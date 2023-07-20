@@ -32,6 +32,7 @@
 
 using System.Collections.Generic;
 using System;
+using RVO2.Scripts.RVO;
 
 namespace RVO
 {

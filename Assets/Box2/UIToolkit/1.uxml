@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement>
+        <ui:Toggle label="Toggle" style="height: 14px; width: 284px;" />
+        <ui:Button text="Button" display-tooltip-when-elided="true" />
+    </ui:VisualElement>
+    <ui:Scroller high-value="100" direction="Horizontal" value="42" />
+    <ui:ProgressBar value="22" title="my-progress" />
+    <ui:DropdownField label="Dropdown" index="-1" choices="System.Collections.Generic.List`1[System.String]" />
+    <ui:RadioButton label="Radio Button" />
+</ui:UXML>
