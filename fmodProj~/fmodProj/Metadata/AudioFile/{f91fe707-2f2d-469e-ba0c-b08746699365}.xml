@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{f91fe707-2f2d-469e-ba0c-b08746699365}">
+		<property name="assetPath">
+			<value>Bird tweet 10.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.46934240362811791</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{e143665c-5aeb-4771-8603-3cdaf43561ea}</destination>
+		</relationship>
+	</object>
+</objects>

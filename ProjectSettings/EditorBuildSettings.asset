@@ -6,22 +6,22 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Box/ComputeShader/ComputeShader.unity
+    path: Assets/RenderBox/ComputeShader/ComputeShader.unity
     guid: 0208c120469ae417796f29250942012a
   - enabled: 1
-    path: Assets/Box/Coroutine/UniTask/UniTaskTutorial/BaseUsing/Scenes/BaseUsing.unity
+    path: Assets/ScriptsBox/Coroutine/UniTask/UniTaskTutorial/BaseUsing/Scenes/BaseUsing.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
-    path: Assets/Box/Coroutine/UniTask/UniTaskTutorial/BaseUsing/Scenes/Cancel.unity
+    path: Assets/ScriptsBox/Coroutine/UniTask/UniTaskTutorial/BaseUsing/Scenes/Cancel.unity
     guid: 656eb825b3744974780eb89e8ce7c197
   - enabled: 1
-    path: Assets/Box/Coroutine/UniTask/UniTaskTutorial/BaseUsing/Scenes/DelayOperation.unity
+    path: Assets/ScriptsBox/Coroutine/UniTask/UniTaskTutorial/BaseUsing/Scenes/DelayOperation.unity
     guid: 43d477c72722fce4a8a9833863d6748f
   - enabled: 1
-    path: Assets/Box/Coroutine/UniTask/UniTaskTutorial/BaseUsing/Scenes/TargetLoadScene.unity
+    path: Assets/ScriptsBox/Coroutine/UniTask/UniTaskTutorial/BaseUsing/Scenes/TargetLoadScene.unity
     guid: 83907e925de38a3408510624b835021a
   - enabled: 1
-    path: Assets/Box/Coroutine/UniTask/UniTaskTutorial/BaseUsing/Scenes/When.unity
+    path: Assets/ScriptsBox/Coroutine/UniTask/UniTaskTutorial/BaseUsing/Scenes/When.unity
     guid: 6c13b9d5292451248a0bd74fe1dca850
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 638c975b612f14f85814ddd7601d17c5,
