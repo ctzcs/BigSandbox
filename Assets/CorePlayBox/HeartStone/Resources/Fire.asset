@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd65d5e4682caa74dbe3cd3e0322142c, type: 3}
+  m_Name: Fire
+  m_EditorClassIdentifier: 
+  Attack: 10
+  Defend: 10
+  Effect: "\u6218\u543C\uFF1A\u706B\u70E7\uFF0C\u5BF9\u654C\u65B9\u968F\u4ECE\u9020\u6210\u7B49\u540C\u4E8E\u653B\u51FB\u529B\u7684\u4F24\u5BB3"
+  Name: "\u706B"
