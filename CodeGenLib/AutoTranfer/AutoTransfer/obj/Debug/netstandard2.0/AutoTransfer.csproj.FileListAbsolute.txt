@@ -1,0 +1,11 @@
+E:\Github\BigSandbox\CodeGenLib\AutoTranfer\AutoTransfer\obj\Debug\netstandard2.0\AutoTransfer.csproj.AssemblyReference.cache
+E:\Github\BigSandbox\CodeGenLib\AutoTranfer\AutoTransfer\obj\Debug\netstandard2.0\AutoTransfer.GeneratedMSBuildEditorConfig.editorconfig
+E:\Github\BigSandbox\CodeGenLib\AutoTranfer\AutoTransfer\obj\Debug\netstandard2.0\AutoTransfer.AssemblyInfoInputs.cache
+E:\Github\BigSandbox\CodeGenLib\AutoTranfer\AutoTransfer\obj\Debug\netstandard2.0\AutoTransfer.AssemblyInfo.cs
+E:\Github\BigSandbox\CodeGenLib\AutoTranfer\AutoTransfer\obj\Debug\netstandard2.0\AutoTransfer.csproj.CoreCompileInputs.cache
+E:\Github\BigSandbox\CodeGenLib\AutoTranfer\AutoTransfer\obj\Debug\netstandard2.0\AutoTransfer.sourcelink.json
+E:\Github\BigSandbox\CodeGenLib\AutoTranfer\AutoTransfer\bin\Debug\netstandard2.0\AutoTransfer.deps.json
+E:\Github\BigSandbox\CodeGenLib\AutoTranfer\AutoTransfer\bin\Debug\netstandard2.0\AutoTransfer.dll
+E:\Github\BigSandbox\CodeGenLib\AutoTranfer\AutoTransfer\bin\Debug\netstandard2.0\AutoTransfer.pdb
+E:\Github\BigSandbox\CodeGenLib\AutoTranfer\AutoTransfer\obj\Debug\netstandard2.0\AutoTransfer.dll
+E:\Github\BigSandbox\CodeGenLib\AutoTranfer\AutoTransfer\obj\Debug\netstandard2.0\AutoTransfer.pdb
