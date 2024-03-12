@@ -1,6 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;using Unity.VisualScripting;
+
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Delete : MonoBehaviour
@@ -25,7 +24,7 @@ public class Delete : MonoBehaviour
         tick++;
         if (tick > 10)
         {
-            Debug.Log($"cools length{cools.Count}\n Is cool[0] null {cools[0]}");
+            //Debug.Log($"cools length{cools.Count}\n Is cool[0] null {cools[0]}");
         }
     }
 }

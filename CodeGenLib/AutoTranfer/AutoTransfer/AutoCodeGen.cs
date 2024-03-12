@@ -74,10 +74,11 @@ namespace AutoTranfer
                     foreach (var param in data.params2Serialize)
                     {
                         srcCode += $"action.Transfer{param};\n";
-                        srcCode += "}}";
-                        //写到这个文件中，参与编译，在dll生成的过程中插了一腿
-                        context.AddSource($"{data.structName}.gen.cs",SourceText.From(srcCode,Encoding.UTF8));
+                        
                     }
+                    srcCode += "}}";
+                    //写到这个文件中，参与编译，在dll生成的过程中插了一腿
+                    context.AddSource($"{data.structName}.gen.cs",SourceText.From(srcCode,Encoding.UTF8));
                     
                 }
             }
