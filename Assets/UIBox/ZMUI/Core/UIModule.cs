@@ -8,8 +8,8 @@ namespace UIBox.ZMUI
 {
     public class UIModule
     {
-        private static UIModule m_Instance;
-        public static UIModule Instance { get { return m_Instance ??= new UIModule(); } }
+        private static UIModule s_Instance;
+        public static UIModule Instance { get { return s_Instance ??= new UIModule(); } }
         
         /// <summary>
         /// 目前的Camera
@@ -44,11 +44,49 @@ namespace UIBox.ZMUI
         {
             m_UICamera = GameObject.Find("UICamera").GetComponent<Camera>();
             m_UIRoot = GameObject.Find("UIRoot").transform;
+            m_WindowConfig= Resources.Load<WindowConfig>("Setting/WindowConfig");
+            //在手机上不会触发调用
+#if UNITY_EDITOR
+            m_WindowConfig.GeneratorWindowConfig();
+#endif
         }
 
 
         #region 窗口管理
 
+        /// <summary>
+        /// 只加载物体，不调用生命周期
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public void PreLoadWindow<T>() where T : WindowBase, new()
+        {
+            System.Type type = typeof(T);
+            string wndName = type.Name;
+            T windowBase = new T();
+            //克隆界面，初始化界面信息
+            //1.生成对应的窗口预制体
+            GameObject nWnd = TempLoadWindow(wndName);
+            //2.初始出对应管理类
+            if (nWnd != null)
+            {
+                windowBase.GameObject = nWnd;
+                windowBase.Transform = nWnd.transform;
+                windowBase.Canvas = nWnd.GetComponent<Canvas>();
+                windowBase.Canvas.worldCamera = m_UICamera;
+                windowBase.Name = nWnd.name;
+                windowBase.OnAwake();
+                windowBase.SetVisible(false);
+                RectTransform rectTrans = nWnd.GetComponent<RectTransform>();
+                rectTrans.anchorMax = Vector2.one;
+                rectTrans.offsetMax = Vector2.zero;
+                rectTrans.offsetMin = Vector2.zero;
+                m_WindowDic.Add(wndName, windowBase);
+                m_WindowList.Add(windowBase);
+            }
+            Debug.LogError("预加载窗口 窗口名字：" + wndName);
+        }
+        
+        
         /// <summary>
         /// 弹出窗口
         /// </summary>
@@ -79,12 +117,55 @@ namespace UIBox.ZMUI
             }
             return InitializedWindow(windowName, windowBase);
         }
+        
+        /// <summary>
+        /// 初始化窗口
+        /// </summary>
+        /// <param name="wdnName"></param>
+        /// <param name="window"></param>
+        /// <returns></returns>
+        private WindowBase InitializedWindow(string wdnName,WindowBase window)
+        {
+            //实例化预制体
+            GameObject newWindow = Object.Instantiate(Resources.Load<GameObject>($"Window/{wdnName}"));
+            if (newWindow is not null)
+            {
+                //设置根节点和相对位置
+                newWindow.transform.SetParent(m_UIRoot);
+                newWindow.transform.localScale = Vector3.one;
+                newWindow.transform.localPosition =Vector3.zero;
+                newWindow.transform.rotation = Quaternion.identity;
+
+                window.GameObject = newWindow;
+                window.Transform = newWindow.transform;
+                window.Name = wdnName;
+                window.Canvas = newWindow.GetComponent<Canvas>();
+                window.Canvas.worldCamera = m_UICamera;
+                window.Transform.SetAsLastSibling();
+                
+                window.OnAwake();
+                window.SetVisible(true);
+                window.OnShow();
+
+                RectTransform rectTransform = newWindow.GetComponent<RectTransform>();
+                rectTransform.anchorMax = Vector2.one;
+                rectTransform.offsetMax = Vector2.zero;
+                rectTransform.offsetMin = Vector2.zero;
+                
+                //添加到管理列表中
+                m_WindowDic.Add(wdnName,window);
+                m_VisibleWindowList.Add(window);
+                return window;
+            }
+            Debug.LogError($"窗口{wdnName}初始化失败");
+            return default;
+        }
 
 
         public void HideWindow(string windowName)
         {
             WindowBase windowBase = GetWindow(windowName);
-            
+            HideWindow(windowBase);
         }
 
         public void HideWindow<T>() where T : WindowBase
@@ -98,14 +179,56 @@ namespace UIBox.ZMUI
             {
                 m_VisibleWindowList.Remove(window);
                 window.SetVisible(false);//隐藏弹窗物体
-                SetWidnowMaskVisible();
+                SetWindowMaskVisible();
                 window.OnHide();
             }
             //在出栈的情况下，上一个界面隐藏时，自动打开栈种的下一个界面
             PopNextStackWindow(window);
         }
         
-        private void SetWidnowMaskVisible()
+        public void DestroyWindow<T>() where T : WindowBase
+        {
+            DestroyWindow(typeof(T).Name);
+        }
+        private void DestroyWindow(string wndName)
+        {
+            WindowBase window = GetWindow(wndName);
+            DestroyWindow(window);
+        }
+        private void DestroyWindow(WindowBase window)
+        {
+            if (window != null)
+            {
+                if (m_WindowDic.ContainsKey(window.Name))
+                {
+                    m_WindowDic.Remove(window.Name);
+                    m_WindowList.Remove(window);
+                    m_VisibleWindowList.Remove(window);
+                }
+                window.SetVisible(false);
+                SetWindowMaskVisible();
+                window.OnHide();
+                window.OnDestroy();
+                GameObject.Destroy(window.GameObject);
+                //在出栈的情况下，上一个界面销毁时，自动打开栈种的下一个界面
+                PopNextStackWindow(window);
+            }
+        }
+        public void DestroyAllWindow(List<string> filterlist = null)
+        {
+            for (int i = m_WindowList.Count - 1; i >= 0; i--)
+            {
+                WindowBase window = m_WindowList[i];
+                if (window == null || (filterlist != null && filterlist.Contains(window.Name)))
+                {
+                    continue;
+                }
+                DestroyWindow(window.Name);
+            }
+            Resources.UnloadUnusedAssets();
+        }
+        
+        private void SetWindowMaskVisible()
         {
             if (!UISetting.Instance.SINGMASK_SYSTEM)
             {
@@ -150,48 +273,7 @@ namespace UIBox.ZMUI
                 maxOrderWndBase.SetMaskVisible(true);
             }
         }
-        /// <summary>
-        /// 初始化窗口
-        /// </summary>
-        /// <param name="wdnName"></param>
-        /// <param name="window"></param>
-        /// <returns></returns>
-        private WindowBase InitializedWindow(string wdnName,WindowBase window)
-        {
-            //实例化预制体
-            GameObject newWindow = Object.Instantiate(Resources.Load<GameObject>($"Window/{wdnName}"));
-            if (newWindow is not null)
-            {
-                //设置根节点和相对位置
-                newWindow.transform.SetParent(m_UIRoot);
-                newWindow.transform.localScale = Vector3.one;
-                newWindow.transform.localPosition =Vector3.zero;
-                newWindow.transform.rotation = Quaternion.identity;
-
-                window.GameObject = newWindow;
-                window.Transform = newWindow.transform;
-                window.Name = wdnName;
-                window.Canvas = newWindow.GetComponent<Canvas>();
-                window.Canvas.worldCamera = m_UICamera;
-                window.Transform.SetAsLastSibling();
-                
-                window.OnAwake();
-                window.SetVisible(true);
-                window.OnShow();
-
-                RectTransform rectTransform = newWindow.GetComponent<RectTransform>();
-                rectTransform.anchorMax = Vector2.one;
-                rectTransform.offsetMax = Vector2.zero;
-                rectTransform.offsetMin = Vector2.zero;
-                
-                //添加到管理列表中
-                m_WindowDic.Add(wdnName,window);
-                m_VisibleWindowList.Add(window);
-                return window;
-            }
-            Debug.LogError($"窗口{wdnName}初始化失败");
-            return default;
-        }
+       
 
         /// <summary>
         /// 已经弹出过的窗口再弹出
@@ -314,8 +396,6 @@ namespace UIBox.ZMUI
         {
             m_WindowQueue.Clear();
         }
-        
-        
         
         public void EnqueueWindow<T>(Action<WindowBase> popCallback = null) where T : WindowBase, new()
         {

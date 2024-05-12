@@ -67,6 +67,7 @@ Shader "Universal Render Pipeline/Unlit ExampleShader"
             CBUFFER_START(UnityPerMaterial)
             float4x4 _ObjectToWorld;
             StructuredBuffer<float4x4> _Matrices;
+            StructuredBuffer<float3> _Float3Pos;
             CBUFFER_END
             
 
@@ -82,8 +83,8 @@ Shader "Universal Render Pipeline/Unlit ExampleShader"
                     0,0,0,1
                 );
                 
-                float3 worldPos = input.positionOS.xyz + transpose(_Matrices[instanceID])[3].xyz;//transpose(mul(unity_WorldToObject,_Matrices[instanceID]))[3].xyz;
-                
+                //float3 worldPos = input.positionOS.xyz + transpose(_Matrices[instanceID])[3].xyz;//这句是使用matrices得时候用的
+                float3 worldPos = input.positionOS.xyz + _Float3Pos[instanceID].xyz;
                 Varyings output = (Varyings)0;
                 UNITY_SETUP_INSTANCE_ID(input);
                 UNITY_TRANSFER_INSTANCE_ID(input, output);

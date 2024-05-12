@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DG.Tweening;
+using UIBox.ZMUI.Setting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -131,6 +132,11 @@ namespace UIBox.ZMUI
         public void SetMaskVisible(bool isVisible)
         {
             //遮罩系统
+            if (!UISetting.Instance.SINGMASK_SYSTEM)
+            {
+                return;
+            }
+            m_UIMask.alpha = isVisible ? 1 : 0;
         }
 
         #endregion
