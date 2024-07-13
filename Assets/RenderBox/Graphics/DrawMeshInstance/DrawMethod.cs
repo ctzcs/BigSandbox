@@ -1,3 +1,5 @@
+using Sirenix.OdinInspector;
+using Unity.Burst;
 using Unity.Mathematics;
 using UnityEngine;
 using Random = Unity.Mathematics.Random;
@@ -16,7 +18,8 @@ namespace RenderBox.Graphics
         [Header("公共")]
         public Vector3 left;
         public Vector3 right;
-        private const int m_Count = 100000;
+        [ShowInInspector,SerializeField]
+        private uint m_Count = 10000;
         public Random random;
         public Mesh mesh;
         public Matrix4x4[] newMats;
@@ -31,7 +34,7 @@ namespace RenderBox.Graphics
         /// <summary>
         /// 命令的数量
         /// </summary>
-        private int m_CommandCountPer1024;
+        private uint m_CommandCountPer1024;
         
         [Header("Indirect")]
         //Indirect
@@ -73,9 +76,9 @@ namespace RenderBox.Graphics
             
             //要传给GPU的数据
             //矩阵使用
-            m_TransformBuffer =  new GraphicsBuffer(GraphicsBuffer.Target.Structured, m_Count, 4 * 4 * sizeof(float));
+            m_TransformBuffer =  new GraphicsBuffer(GraphicsBuffer.Target.Structured, (int)m_Count, 4 * 4 * sizeof(float));
             //float3使用
-            m_TransformBuffer2 = new GraphicsBuffer(GraphicsBuffer.Target.Structured, m_Count, 3*sizeof(float));
+            m_TransformBuffer2 = new GraphicsBuffer(GraphicsBuffer.Target.Structured, (int)m_Count, 3*sizeof(float));
             m_CommandData = new GraphicsBuffer.IndirectDrawIndexedArgs[1];
             m_GraphicsBuffer = new GraphicsBuffer(GraphicsBuffer.Target.IndirectArguments, m_CommandData.Length,
                 GraphicsBuffer.IndirectDrawIndexedArgs.size);
@@ -152,7 +155,7 @@ namespace RenderBox.Graphics
             //新的Render主要就是设置RenderParams   
             RenderParams rp = new RenderParams(indirectMaterial);
             //FOV剔除
-            rp.worldBounds = new Bounds(Vector3.zero, 10000 * Vector3.one);
+            rp.worldBounds = new Bounds(Vector3.zero, 100 * Vector3.one);
                 
             rp.matProps = new MaterialPropertyBlock();
             //只有这时候才改坐标
@@ -186,7 +189,7 @@ namespace RenderBox.Graphics
             m_GraphicsBuffer.SetData(m_CommandData);
             UnityEngine.Graphics.RenderMeshIndirect(rp, mesh, m_GraphicsBuffer,m_CommandData.Length);
         }
-        
+        [BurstCompile]
         void RenderIndirectUseFloat3()
         {
             //新的Render主要就是设置RenderParams   
