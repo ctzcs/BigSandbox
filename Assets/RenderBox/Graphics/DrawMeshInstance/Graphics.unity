@@ -173,9 +173,10 @@ MonoBehaviour:
   random:
     state: 0
   mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
-  newMats: []
+  newPosMatrix: []
   type: 2
   positions: []
+  colors: []
   material: {fileID: 2100000, guid: d36ced6205860b54fbc48ba18161956f, type: 2}
   indirectMaterial: {fileID: 2100000, guid: d27441f82f1ff8241b0f091eedb8a60e, type: 2}
 --- !u!1 &245231275

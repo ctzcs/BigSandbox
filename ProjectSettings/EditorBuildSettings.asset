@@ -24,7 +24,7 @@ EditorBuildSettings:
     path: Assets/ScriptsBox/Coroutine/UniTask/UniTaskTutorial/BaseUsing/Scenes/When.unity
     guid: 6c13b9d5292451248a0bd74fe1dca850
   - enabled: 1
-    path: Assets/RenderBox/Graphics/Graphics.unity
+    path: Assets/RenderBox/Graphics/DrawMeshInstance/Graphics.unity
     guid: 63e62be8306545a41b811756cbe911af
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 638c975b612f14f85814ddd7601d17c5,

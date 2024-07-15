@@ -1,5 +1,5 @@
 
-Shader "Universal Render Pipeline/Unlit ExampleShader"
+Shader "Universal Render Pipeline/Unlit Indirect Shader"
 {
     Properties
     {
@@ -50,6 +50,7 @@ Shader "Universal Render Pipeline/Unlit ExampleShader"
             // -------------------------------------
             // Unity defined keywords
             #pragma multi_compile_fog
+            //Unity Instancing
             #pragma multi_compile_instancing
             #pragma multi_compile _ DOTS_INSTANCING_ON
             #pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION
@@ -63,12 +64,15 @@ Shader "Universal Render Pipeline/Unlit ExampleShader"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/UnlitForwardPass.hlsl"
             #define UNITY_INDIRECT_DRAW_ARGS IndirectDrawIndexedArgs
             #include "UnityIndirect.cginc"
-            
+
+            //暴露的属性块
             CBUFFER_START(UnityPerMaterial)
             float4x4 _ObjectToWorld;
-            StructuredBuffer<float4x4> _Matrices;
+            // StructuredBuffer<float4x4> _Matrices;
             StructuredBuffer<float3> _Float3Pos;
+            StructuredBuffer<float3> _Colors;
             CBUFFER_END
+            
             
 
             Varyings vert(Attributes input,uint instanceID:SV_InstanceID)
@@ -85,6 +89,7 @@ Shader "Universal Render Pipeline/Unlit ExampleShader"
                 
                 //float3 worldPos = input.positionOS.xyz + transpose(_Matrices[instanceID])[3].xyz;//这句是使用matrices得时候用的
                 float3 worldPos = input.positionOS.xyz + _Float3Pos[instanceID].xyz;
+                
                 Varyings output = (Varyings)0;
                 UNITY_SETUP_INSTANCE_ID(input);
                 UNITY_TRANSFER_INSTANCE_ID(input, output);
@@ -100,6 +105,7 @@ Shader "Universal Render Pipeline/Unlit ExampleShader"
                 
                 output.positionCS = vertexInput.positionCS;
                 output.uv = TRANSFORM_TEX(input.uv, _BaseMap);
+                
                 #if defined(_FOG_FRAGMENT)
                 output.fogCoord = vertexInput.positionVS.z;
                 #else
@@ -123,14 +129,17 @@ Shader "Universal Render Pipeline/Unlit ExampleShader"
                 return output;
             }
 
+            
             half4 frag(Varyings input) : SV_Target
             {
                 UNITY_SETUP_INSTANCE_ID(input);
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
-
+                
                 half2 uv = input.uv;
                 half4 texColor = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
                 half3 color = texColor.rgb * _BaseColor.rgb;
+                
+                
                 half alpha = texColor.a * _BaseColor.a;
 
                 AlphaDiscard(alpha, _Cutoff);
@@ -142,7 +151,7 @@ Shader "Universal Render Pipeline/Unlit ExampleShader"
                 InputData inputData;
                 InitializeInputData(input, inputData);
                 SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv, _BaseMap);
-
+                
             #ifdef _DBUFFER
                 ApplyDecalToBaseColor(input.positionCS, color);
             #endif
@@ -165,10 +174,13 @@ Shader "Universal Render Pipeline/Unlit ExampleShader"
                 AmbientOcclusionFactor aoFactor = GetScreenSpaceAmbientOcclusion(normalizedScreenSpaceUV);
                 finalColor.rgb *= aoFactor.directAmbientOcclusion;
             #endif
-
-                finalColor.rgb = MixFog(finalColor.rgb, fogFactor);
-
-                return finalColor;
+                
+                 
+                //float3 matColor = float3(instanceID/10000,1,1); //_Colors[instanceID];
+                //finalColor.rgb *= matColor;
+                finalColor.rgb = MixFog(finalColor.rgb , fogFactor);
+                
+                return finalColor ;
             }
             ENDHLSL
         }
