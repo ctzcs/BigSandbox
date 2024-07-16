@@ -73,9 +73,57 @@ Shader "Universal Render Pipeline/Unlit Indirect Shader"
             StructuredBuffer<float3> _Colors;
             CBUFFER_END
             
-            
+            struct Appdata
+            {
+                float4 positionOS : POSITION;
+                float2 uv : TEXCOORD0;
+                
+                #if defined(DEBUG_DISPLAY)
+                float3 normalOS : NORMAL;
+                float4 tangentOS : TANGENT;
+                #endif
 
-            Varyings vert(Attributes input,uint instanceID:SV_InstanceID)
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
+
+            struct v2f
+            {
+                float2 uv : TEXCOORD0;
+                float fogCoord : TEXCOORD1;
+                float4 positionCS : SV_POSITION;
+                uint instanceId:INSTANCEID_SEMANTIC;
+                #if defined(DEBUG_DISPLAY)
+                float3 positionWS : TEXCOORD2;
+                float3 normalWS : TEXCOORD3;
+                float3 viewDirWS : TEXCOORD4;
+                #endif
+
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+                UNITY_VERTEX_OUTPUT_STEREO
+            };
+
+            void InitializeInputData(v2f input, out InputData inputData)
+            {
+                inputData = (InputData)0;
+
+                #if defined(DEBUG_DISPLAY)
+                inputData.positionWS = input.positionWS;
+                inputData.normalWS = input.normalWS;
+                inputData.viewDirectionWS = input.viewDirWS;
+                #else
+                inputData.positionWS = float3(0, 0, 0);
+                inputData.normalWS = half3(0, 0, 1);
+                inputData.viewDirectionWS = half3(0, 0, 1);
+                #endif
+                inputData.shadowCoord = 0;
+                inputData.fogCoord = 0;
+                inputData.vertexLighting = half3(0, 0, 0);
+                inputData.bakedGI = half3(0, 0, 0);
+                inputData.normalizedScreenSpaceUV = 0;
+                inputData.shadowMask = half4(1, 1, 1, 1);
+            }
+
+            v2f vert(Appdata input,uint instanceID:SV_InstanceID)
             {
                 InitIndirectDrawArgs(0);
 
@@ -90,7 +138,7 @@ Shader "Universal Render Pipeline/Unlit Indirect Shader"
                 //float3 worldPos = input.positionOS.xyz + transpose(_Matrices[instanceID])[3].xyz;//这句是使用matrices得时候用的
                 float3 worldPos = input.positionOS.xyz + _Float3Pos[instanceID].xyz;
                 
-                Varyings output = (Varyings)0;
+                v2f output = (v2f)0;
                 UNITY_SETUP_INSTANCE_ID(input);
                 UNITY_TRANSFER_INSTANCE_ID(input, output);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
@@ -126,11 +174,13 @@ Shader "Universal Render Pipeline/Unlit Indirect Shader"
                 output.viewDirWS = viewDirWS;
                 #endif
 
+                output.instanceId = instanceID;
+                
                 return output;
             }
 
             
-            half4 frag(Varyings input) : SV_Target
+            half4 frag(v2f input) : SV_Target
             {
                 UNITY_SETUP_INSTANCE_ID(input);
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
@@ -176,8 +226,8 @@ Shader "Universal Render Pipeline/Unlit Indirect Shader"
             #endif
                 
                  
-                //float3 matColor = float3(instanceID/10000,1,1); //_Colors[instanceID];
-                //finalColor.rgb *= matColor;
+                float3 matColor = _Colors[input.instanceId];
+                finalColor.rgb *= matColor;
                 finalColor.rgb = MixFog(finalColor.rgb , fogFactor);
                 
                 return finalColor ;

@@ -1,9 +1,8 @@
-using System;
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Unity.Burst;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Random = Unity.Mathematics.Random;
 
 
@@ -64,6 +63,19 @@ namespace RenderBox.Graphics
         private static readonly int m_Float3Pos = Shader.PropertyToID("_Float3Pos");
         private static readonly int m_Colors = Shader.PropertyToID("_Colors");
 
+
+
+        #region Culling
+
+        private CullingGroup _cullingGroup;
+        private BoundingSphere[] _bounds;
+        private Dictionary<int, Matrix4x4> _cullingMatrices;
+        private Matrix4x4[] _drawMatrices;
+        private bool _calcDrawFlag = false;
+        
+        
+
+        #endregion
         private void Awake()
         {
             
@@ -79,8 +91,29 @@ namespace RenderBox.Graphics
             m_GraphicsBuffer = new GraphicsBuffer(GraphicsBuffer.Target.IndirectArguments, m_CommandData.Length,
                 GraphicsBuffer.IndirectDrawIndexedArgs.size);
             m_ColorBuffer = new GraphicsBuffer(GraphicsBuffer.Target.Structured, (int)m_Count, 3*sizeof(float));
+
+            #region Culling模块
+
+            _cullingGroup = new CullingGroup();
+            _cullingGroup.targetCamera = Camera.main;
+            _cullingGroup.SetDistanceReferencePoint(Camera.main.transform);
+            
+
+
+            #endregion
         }
 
+
+        void OnChangeRange(CullingGroupEvent ev)
+        {
+            if (ev.isVisible) _cullingMatrices[ev.index] = newPosMatrix[ev.index];
+            else
+            {
+                _cullingMatrices.Remove(ev.index);
+            }
+
+            _calcDrawFlag = true;
+        }
         void Start()
         {
             left = Camera.main.ViewportToWorldPoint(Vector2.zero);
@@ -222,7 +255,7 @@ namespace RenderBox.Graphics
             RenderParams rp = new RenderParams(indirectMaterial);
             //FOV剔除
             rp.worldBounds = new Bounds(Vector3.zero, 10000 * Vector3.one);
-                
+            //设置MaterialPropertyBlock
             rp.matProps = new MaterialPropertyBlock();
             //只有这时候才改坐标
             /*if (m_ElapsedTime > m_FixedTime)
