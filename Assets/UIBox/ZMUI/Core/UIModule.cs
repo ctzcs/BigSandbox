@@ -179,7 +179,7 @@ namespace UIBox.ZMUI
             {
                 m_VisibleWindowList.Remove(window);
                 window.SetVisible(false);//隐藏弹窗物体
-                SetWindowMaskVisible();
+                SetWindowMaskVisible();//隐藏的时候设置窗口的遮罩可见
                 window.OnHide();
             }
             //在出栈的情况下，上一个界面隐藏时，自动打开栈种的下一个界面
@@ -228,6 +228,9 @@ namespace UIBox.ZMUI
             Resources.UnloadUnusedAssets();
         }
         
+        /// <summary>
+        /// 设置窗口Mask可见
+        /// </summary>
         private void SetWindowMaskVisible()
         {
             if (!UISetting.Instance.SINGMASK_SYSTEM)
