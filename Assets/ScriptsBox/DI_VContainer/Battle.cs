@@ -18,6 +18,11 @@ namespace ScriptsBox.DI_VContainer
         void BattleLoop()
         {
             _helloWorldService.Battle();
+            
+            
         }
     }
+
+
+    
 }

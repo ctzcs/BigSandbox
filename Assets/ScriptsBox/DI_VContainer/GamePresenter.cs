@@ -12,10 +12,10 @@ namespace ScriptsBox.DI_VContainer
         private readonly HelloWorldService _helloWorldService;
         private readonly HelloView _helloView;
         
-        public GamePresenter(HelloWorldService helloWorldService,HelloView helloView)
+        public GamePresenter(IObjectResolver container,HelloWorldService helloWorldService)
         {
             _helloWorldService = helloWorldService;
-            _helloView = helloView;
+            _helloView = container.Instantiate(Resources.Load<HelloView>("HelloView"));
         }
         
         void IStartable.Start()

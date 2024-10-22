@@ -10,8 +10,6 @@ namespace ScriptsBox.DI_VContainer
     /// </summary>
     public class GameLifetimeScope:LifetimeScope
     {
-        [SerializeField]
-        private HelloView _helloView;
         protected override void Configure(IContainerBuilder builder)
         {
             //RegisterEntryPointer是用于注册与Unity的PlayerLoop事件相关接口的别名，不依赖Mono注册生命周期，有助于解耦领域逻辑与表现层
@@ -19,7 +17,7 @@ namespace ScriptsBox.DI_VContainer
             //注册逻辑
             builder.Register<HelloWorldService>(Lifetime.Singleton);
             //注册显示
-            builder.RegisterComponent(_helloView);
+            //builder.RegisterComponent(_helloView);
 
             builder.Register<Battle>(Lifetime.Singleton);
 
