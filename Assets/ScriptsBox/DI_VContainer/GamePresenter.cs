@@ -11,11 +11,14 @@ namespace ScriptsBox.DI_VContainer
     {
         private readonly HelloWorldService _helloWorldService;
         private readonly HelloView _helloView;
-        
-        public GamePresenter(IObjectResolver container,HelloWorldService helloWorldService)
+        private readonly BattleFactory _battleFactory;
+        private IObjectResolver _container;
+        public GamePresenter(IObjectResolver container,HelloWorldService helloWorldService,BattleFactory battleFactory)
         {
             _helloWorldService = helloWorldService;
             _helloView = container.Instantiate(Resources.Load<HelloView>("HelloView"));
+            _container = container;
+            _battleFactory = battleFactory;
         }
         
         void IStartable.Start()
@@ -26,6 +29,10 @@ namespace ScriptsBox.DI_VContainer
         void ITickable.Tick()
         {
             //Debug.Log("Tick");
+
+            Battle battle = _battleFactory.Create();
+            battle.SetId(battle.GetHashCode().ToString());
+            battle.BattleLoop();
         }
     }
 

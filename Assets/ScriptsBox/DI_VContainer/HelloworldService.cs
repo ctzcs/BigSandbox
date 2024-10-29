@@ -12,9 +12,9 @@ namespace ScriptsBox.DI_VContainer
             Debug.Log("HelloWorld");
         }
 
-        public void Battle()
+        public void Battle(string id)
         {
-            Debug.Log("战斗");
+            Debug.Log($"{id}战斗");
         }
     }
 }

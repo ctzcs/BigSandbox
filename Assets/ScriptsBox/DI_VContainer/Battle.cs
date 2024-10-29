@@ -7,19 +7,22 @@ namespace ScriptsBox.DI_VContainer
     public class Battle
     {
         private HelloWorldService _helloWorldService;
+        private string _id;
 
-        [Inject]
-        public void Constructor(HelloWorldService helloWorldService)
+        public Battle(HelloWorldService helloWorldService)
         {
             _helloWorldService = helloWorldService;
         }
 
-        [Button]
-        void BattleLoop()
+        public void SetId(string id)
         {
-            _helloWorldService.Battle();
-            
-            
+            _id = id;
+        }
+
+        [Button]
+        public void BattleLoop()
+        {
+            _helloWorldService.Battle(_id);
         }
     }
 

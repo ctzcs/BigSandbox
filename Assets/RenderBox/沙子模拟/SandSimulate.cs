@@ -56,7 +56,7 @@ namespace RenderBox.SandSimulate
         // Start is called before the first frame update
         void Awake()
         {
-            size = 64;
+            size = 48;
             cellArray = new Cell[size,size];
             for (int i = 0; i < size; i++)
             {
@@ -125,7 +125,7 @@ namespace RenderBox.SandSimulate
             int y = index.Item2;
             cellArray[x, y].pixel ??= new SandPixel()
             {
-                nowColor = Color.black,
+                nowColor = new Color(0,1,0,0.2f),
                 sandType = ESandType.Solid,
                 sandState = ESandState.Falling
             };
@@ -162,6 +162,7 @@ namespace RenderBox.SandSimulate
             }
             texture2D.SetPixels(colors);
             texture2D.Apply();
+            
         }
 
         void Step(int x,int y)

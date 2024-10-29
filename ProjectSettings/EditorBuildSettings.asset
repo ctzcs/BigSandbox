@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/RenderBox/ComputeShader/ComputeShader.unity
+    path: Assets/RenderBox/ComputeShader/Flocking/ComputeShader.unity
     guid: 0208c120469ae417796f29250942012a
   - enabled: 0
     path: Assets/ScriptsBox/Coroutine/UniTask/UniTaskTutorial/BaseUsing/Scenes/BaseUsing.unity

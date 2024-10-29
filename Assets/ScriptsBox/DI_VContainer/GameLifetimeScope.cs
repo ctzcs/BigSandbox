@@ -19,7 +19,9 @@ namespace ScriptsBox.DI_VContainer
             //注册显示
             //builder.RegisterComponent(_helloView);
 
-            builder.Register<Battle>(Lifetime.Singleton);
+            //注册普通工厂
+            builder.Register<BattleFactory>(Lifetime.Singleton);
+            
 
             /*
             //如果有多个入口点，也可以这样
