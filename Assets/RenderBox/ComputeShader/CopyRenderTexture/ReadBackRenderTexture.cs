@@ -9,13 +9,17 @@ public class ReadBackRenderTexture : MonoBehaviour
     public Renderer useForTexture2d;
     private RenderTexture _rt;
 
-    private Texture2D _texture2D;
+    //private Texture2D _texture2D;
     private int _groupSize = 8;
     private int _size = 64;
     private int _pixelCount;
     private int _rtBufferSize;
     private int _csKernel;
     private ComputeBuffer _renderTextureBuffer;
+
+    private static readonly int Result = Shader.PropertyToID("Result");
+    private static readonly int Time1 = Shader.PropertyToID("Time");
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,12 +31,14 @@ public class ReadBackRenderTexture : MonoBehaviour
             enableRandomWrite = true,
             filterMode = FilterMode.Point
         };
+        
         _rt.Create();
-        _texture2D = new Texture2D(_size, _size, TextureFormat.ARGB32, false)
-        {
-            filterMode = FilterMode.Point
-        };
+        // _texture2D = new Texture2D(_size, _size, TextureFormat.ARGB32, false)
+        // {
+        //     filterMode = FilterMode.Point
+        // };
         _renderTextureBuffer = new ComputeBuffer(_pixelCount,_rtBufferSize);
+        useForRenderTexture.material.mainTexture = _rt;
         
     }
 
@@ -41,27 +47,31 @@ public class ReadBackRenderTexture : MonoBehaviour
         _renderTextureBuffer.Dispose();
     }
 
+    
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        
+        AsyncGPUCompleteReadback();
     }
 
     void AsyncGPUCompleteReadback()
     {
+        cs.SetTexture(_csKernel,Result,_rt);
+        cs.SetFloat(Time1,Time.time);
         cs.Dispatch(_csKernel,_pixelCount/_groupSize,_pixelCount/_groupSize,1);
-        AsyncGPUReadback.Request(_renderTextureBuffer, _pixelCount * _rtBufferSize, 0, OnCompleteReadback_RenderTexture);
+        //AsyncGPUReadback.Request(_renderTextureBuffer, _pixelCount * _rtBufferSize, 0, OnCompleteReadback_RenderTexture);
     }
     
     
     void OnCompleteReadback_RenderTexture(AsyncGPUReadbackRequest request)
     {
-        if(request.hasError || _texture2D == null)return;
+        if(request.hasError )return;
+        //useForRenderTexture.material.mainTexture = _rt;
         //TODO 可以读Texture但是对线程组有要求，不能是一维线程组
-        var data = request.GetData<Color32>();//request.GetData<Color32>();
-        //MyLog.Log($"{num}");
-        Graphics.CopyTexture(_rt,_texture2D);
-        _texture2D.Apply();
+        // var data = request.GetData<Color32>();//request.GetData<Color32>();
+        // //MyLog.Log($"{num}");
+        // Graphics.CopyTexture(_rt,_texture2D);
+        // _texture2D.Apply();
         //rd.material.SetTexture(MainTex,_texture2D);
     }
 }
