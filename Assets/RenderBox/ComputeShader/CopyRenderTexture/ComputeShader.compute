@@ -11,6 +11,11 @@ void CSMain (uint3 id : SV_DispatchThreadID)
 {
     // TODO: insert actual code here!
     float t= Time % 2.0f;
-    float checker = (id.x / 8 + id.y / 8) % 2 * t;
-    Result[id.xy] = float4(checker, checker, checker, 1.0);
+    //棋盘
+    //float checker = (id.x / 8 + id.y / 8) % 2 * t;
+    //Result[id.xy] = float4(checker, checker, checker, 1.0);
+    //从黑到白
+    float4 checker2 = float4(id.x/63.0,id.y/63.0,1,1.0); 
+    Result[id.xy] = checker2;
+    
 }
