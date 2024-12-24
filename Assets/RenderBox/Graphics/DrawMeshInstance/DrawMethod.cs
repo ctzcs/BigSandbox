@@ -256,7 +256,7 @@ namespace RenderBox.Graphics
             //FOV剔除
             rp.worldBounds = new Bounds(Vector3.zero, 10000 * Vector3.one);
             //设置MaterialPropertyBlock
-            rp.matProps = new MaterialPropertyBlock();
+            //rp.matProps = new MaterialPropertyBlock();
             //只有这时候才改坐标
             /*if (m_ElapsedTime > m_FixedTime)
             {*/

@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 /// <summary>
 /// 这种东西的应用场景可能就是，如果我有一张卡，是下一个张牌如果是攻击就触发两次，就可以用这种形式
+/// 2024.12.24 应该是不能这样做的，可能很少的情况会这样做，这样做丢失的风险很大
 /// </summary>
 public class Delegate_delet : MonoBehaviour
 {

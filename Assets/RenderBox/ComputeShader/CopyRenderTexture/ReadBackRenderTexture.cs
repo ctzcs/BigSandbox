@@ -6,10 +6,8 @@ public class ReadBackRenderTexture : MonoBehaviour
 {
     public UnityEngine.ComputeShader cs;
     public Renderer useForRenderTexture;
-    public Renderer useForTexture2d;
     private RenderTexture _rt;
-
-    //private Texture2D _texture2D;
+    
     private int _groupSize = 8;
     private int _size = 64;
     private int _pixelCount;
@@ -33,10 +31,6 @@ public class ReadBackRenderTexture : MonoBehaviour
         };
         
         _rt.Create();
-        // _texture2D = new Texture2D(_size, _size, TextureFormat.ARGB32, false)
-        // {
-        //     filterMode = FilterMode.Point
-        // };
         _renderTextureBuffer = new ComputeBuffer(_pixelCount,_rtBufferSize);
         useForRenderTexture.material.mainTexture = _rt;
         
@@ -62,7 +56,7 @@ public class ReadBackRenderTexture : MonoBehaviour
         //AsyncGPUReadback.Request(_renderTextureBuffer, _pixelCount * _rtBufferSize, 0, OnCompleteReadback_RenderTexture);
     }
     
-    
+    //renderTexture无需回读
     void OnCompleteReadback_RenderTexture(AsyncGPUReadbackRequest request)
     {
         if(request.hasError )return;

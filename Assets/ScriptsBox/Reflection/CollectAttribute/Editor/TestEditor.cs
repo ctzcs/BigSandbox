@@ -8,11 +8,11 @@ namespace Box2.Reflection.CollectAttribute
 {
     public class TestEditor : UnityEditor.EditorWindow
     {
-        [MenuItem("Tools/ShowWindow")]
+        [MenuItem("Tools/Reflection/CollectModule")]
         public static void ShowWindow()
         {
             
-            var window = EditorWindow.GetWindow<TestEditor>();
+            var window = GetWindow<TestEditor>();
             window.Show();
         }
         

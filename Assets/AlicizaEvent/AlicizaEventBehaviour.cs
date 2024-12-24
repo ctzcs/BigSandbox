@@ -17,7 +17,7 @@ namespace AlicizaFramework
 }
 
 
-public class NewBehaviourScript : MonoBehaviour
+public class AlicizaEventBehaviour : MonoBehaviour
 {
     private void Start()
     {
