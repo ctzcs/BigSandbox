@@ -17,8 +17,8 @@ namespace RenderBox.Graphics
             RenderIndirectByFloat3,
         }
         [Header("公共")]
-        public Vector3 left;
-        public Vector3 right;
+        public float3 left;
+        public float3 right;
         [ShowInInspector,SerializeField]
         private uint m_Count = 10000;
         public Random random;
@@ -262,8 +262,7 @@ namespace RenderBox.Graphics
             {*/
             for (int i = 0; i < m_Count; i++)
             {
-                var deltaPos =
-                    UnityEngine.Random.insideUnitCircle;
+                var deltaPos = UnityEngine.Random.insideUnitCircle;
                 //random.NextFloat3(new float3(-0.1f, -0.1f, 0), new float3(0.1f, 0.1f, 0)).xy; //new float2(0.01f, 0.01f); //
                 /*var column = newMats[i].GetColumn(3);*/
                 float3 position = positions[i];
@@ -272,9 +271,10 @@ namespace RenderBox.Graphics
                 float colorY = Mathf.Abs(deltaPos.y);
                 float3 color = new float3(colorX,colorY,1);
                 
-                newPos.x = Mathf.Clamp(newPos.x,left.x,right.x);
+                NewPos(ref newPos,in left,in right);
+                /*newPos.x = Mathf.Clamp(newPos.x,left.x,right.x);
                 newPos.y = Mathf.Clamp(newPos.y, left.y, right.y);//
-                //newPos.xy = math.clamp(newPos.xy, new float2(left.x, left.y), new float2(right.x, right.y));//
+                newPos.xy = math.clamp(newPos.xy, new float2(left.x, left.y), new float2(right.x, right.y));//*/
                 //newMats[i].SetColumn(3,new float4(newPos,1));
                 //newMats[i] = Matrix4x4.TRS(newPos, Quaternion.identity, Vector3.one);//.SetTRS(newPos, Quaternion.identity, Vector3.one);
                 //将数据保存在Csharp端
@@ -300,6 +300,14 @@ namespace RenderBox.Graphics
             UnityEngine.Graphics.RenderMeshIndirect(rp, mesh, m_GraphicsBuffer,m_CommandData.Length);
         }
 
+        [BurstCompile]
+        static void NewPos(ref float3 newPos,in float3 left,in float3 right)
+        {
+            newPos.x = math.clamp(newPos.x,left.x,right.x);
+            newPos.y = math.clamp(newPos.y, left.y, right.y);//
+            newPos.xy = math.clamp(newPos.xy, new float2(left.x, left.y), new float2(right.x, right.y));
+        }
+        
 
         private void OnDestroy()
         {
