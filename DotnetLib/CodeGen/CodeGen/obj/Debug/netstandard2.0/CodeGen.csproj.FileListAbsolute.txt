@@ -1,0 +1,11 @@
+D:\MySpace\Github\BigSandbox\DotnetLib\CodeGen\CodeGen\bin\Debug\netstandard2.0\CodeGen.deps.json
+D:\MySpace\Github\BigSandbox\DotnetLib\CodeGen\CodeGen\bin\Debug\netstandard2.0\CodeGen.dll
+D:\MySpace\Github\BigSandbox\DotnetLib\CodeGen\CodeGen\bin\Debug\netstandard2.0\CodeGen.pdb
+D:\MySpace\Github\BigSandbox\DotnetLib\CodeGen\CodeGen\obj\Debug\netstandard2.0\CodeGen.csproj.AssemblyReference.cache
+D:\MySpace\Github\BigSandbox\DotnetLib\CodeGen\CodeGen\obj\Debug\netstandard2.0\CodeGen.GeneratedMSBuildEditorConfig.editorconfig
+D:\MySpace\Github\BigSandbox\DotnetLib\CodeGen\CodeGen\obj\Debug\netstandard2.0\CodeGen.AssemblyInfoInputs.cache
+D:\MySpace\Github\BigSandbox\DotnetLib\CodeGen\CodeGen\obj\Debug\netstandard2.0\CodeGen.AssemblyInfo.cs
+D:\MySpace\Github\BigSandbox\DotnetLib\CodeGen\CodeGen\obj\Debug\netstandard2.0\CodeGen.csproj.CoreCompileInputs.cache
+D:\MySpace\Github\BigSandbox\DotnetLib\CodeGen\CodeGen\obj\Debug\netstandard2.0\CodeGen.sourcelink.json
+D:\MySpace\Github\BigSandbox\DotnetLib\CodeGen\CodeGen\obj\Debug\netstandard2.0\CodeGen.dll
+D:\MySpace\Github\BigSandbox\DotnetLib\CodeGen\CodeGen\obj\Debug\netstandard2.0\CodeGen.pdb

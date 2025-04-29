@@ -62,7 +62,7 @@ namespace RenderBox.Graphics
         private float m_ElapsedTime = 0;
         private static readonly int m_Float3Pos = Shader.PropertyToID("_Float3Pos");
         private static readonly int m_Colors = Shader.PropertyToID("_Colors");
-
+        //偏移位置，大小
 
 
         #region Culling
@@ -132,6 +132,7 @@ namespace RenderBox.Graphics
             {
                 var pos = random.NextFloat3(left, right).xyz;
                 pos.z = 0;
+                
                 newPosMatrix[i] = Matrix4x4.TRS(pos, Quaternion.identity, Vector3.one);
                 positions[i] = new float3(pos);
             }
@@ -248,18 +249,17 @@ namespace RenderBox.Graphics
             
             
         }
-        [BurstCompile]
+        
         void RenderIndirectUseFloat3()
         {
             //新的Render主要就是设置RenderParams   
             RenderParams rp = new RenderParams(indirectMaterial);
             //FOV剔除
-            rp.worldBounds = new Bounds(Vector3.zero, 10000 * Vector3.one);
+            //rp.worldBounds = new Bounds(Vector3.zero, 10000 * Vector3.one);
             //设置MaterialPropertyBlock
             //rp.matProps = new MaterialPropertyBlock();
             //只有这时候才改坐标
-            /*if (m_ElapsedTime > m_FixedTime)
-            {*/
+            
             for (int i = 0; i < m_Count; i++)
             {
                 var deltaPos = UnityEngine.Random.insideUnitCircle;
@@ -271,7 +271,7 @@ namespace RenderBox.Graphics
                 float colorY = Mathf.Abs(deltaPos.y);
                 float3 color = new float3(colorX,colorY,1);
                 
-                NewPos(ref newPos,in left,in right);
+                DrawMethodUtils.NewPos(ref newPos,in left,in right);
                 /*newPos.x = Mathf.Clamp(newPos.x,left.x,right.x);
                 newPos.y = Mathf.Clamp(newPos.y, left.y, right.y);//
                 newPos.xy = math.clamp(newPos.xy, new float2(left.x, left.y), new float2(right.x, right.y));//*/
@@ -300,13 +300,7 @@ namespace RenderBox.Graphics
             UnityEngine.Graphics.RenderMeshIndirect(rp, mesh, m_GraphicsBuffer,m_CommandData.Length);
         }
 
-        [BurstCompile]
-        static void NewPos(ref float3 newPos,in float3 left,in float3 right)
-        {
-            newPos.x = math.clamp(newPos.x,left.x,right.x);
-            newPos.y = math.clamp(newPos.y, left.y, right.y);//
-            newPos.xy = math.clamp(newPos.xy, new float2(left.x, left.y), new float2(right.x, right.y));
-        }
+        
         
 
         private void OnDestroy()
@@ -320,6 +314,20 @@ namespace RenderBox.Graphics
             m_TransformBuffer2 = null;
             m_GraphicsBuffer?.Release();
             m_GraphicsBuffer = null;
+            
+            
+            _cullingGroup.Dispose();
         }
+    }
+
+
+    [BurstCompile]
+    public static class DrawMethodUtils
+    {
+        [BurstCompile]
+        public static void NewPos(ref float3 newPos,in float3 left,in float3 right)
+        {
+            newPos.xy = math.clamp(newPos.xy, left.xy, right.xy);
+        }    
     }
 }

@@ -56,6 +56,8 @@ Shader "Universal Render Pipeline/Unlit Indirect Shader"
             #pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION
             #pragma multi_compile_fragment _ _DBUFFER_MRT1 _DBUFFER_MRT2 _DBUFFER_MRT3
             #pragma multi_compile _ DEBUG_DISPLAY
+            //instancing宏展开
+            #pragma instancing_options procedural:setup
 
             #pragma vertex vert
             #pragma fragment frag
@@ -63,14 +65,17 @@ Shader "Universal Render Pipeline/Unlit Indirect Shader"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/UnlitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/UnlitForwardPass.hlsl"
             #define UNITY_INDIRECT_DRAW_ARGS IndirectDrawIndexedArgs
+            
             #include "UnityIndirect.cginc"
 
+            uniform float4x4 _ObjectToWorld;
+            // StructuredBuffer<float4x4> _Matrices;
+            uniform StructuredBuffer<float3> _Float3Pos;
+            uniform StructuredBuffer<float3> _Colors;
+            
             //暴露的属性块
             CBUFFER_START(UnityPerMaterial)
-            float4x4 _ObjectToWorld;
-            // StructuredBuffer<float4x4> _Matrices;
-            StructuredBuffer<float3> _Float3Pos;
-            StructuredBuffer<float3> _Colors;
+            
             CBUFFER_END
             
             struct Appdata
@@ -91,7 +96,6 @@ Shader "Universal Render Pipeline/Unlit Indirect Shader"
                 float2 uv : TEXCOORD0;
                 float fogCoord : TEXCOORD1;
                 float4 positionCS : SV_POSITION;
-                uint instanceId:INSTANCEID_SEMANTIC;
                 #if defined(DEBUG_DISPLAY)
                 float3 positionWS : TEXCOORD2;
                 float3 normalWS : TEXCOORD3;
@@ -99,10 +103,10 @@ Shader "Universal Render Pipeline/Unlit Indirect Shader"
                 #endif
 
                 UNITY_VERTEX_INPUT_INSTANCE_ID
-                UNITY_VERTEX_OUTPUT_STEREO
+                //UNITY_VERTEX_OUTPUT_STEREO
             };
 
-            void InitializeInputData(v2f input, out InputData inputData)
+            void InitializeInputData(/*v2f input,*/ out InputData inputData)
             {
                 inputData = (InputData)0;
 
@@ -123,8 +127,11 @@ Shader "Universal Render Pipeline/Unlit Indirect Shader"
                 inputData.shadowMask = half4(1, 1, 1, 1);
             }
 
+            void setup(){}
+            
             v2f vert(Appdata input,uint instanceID:SV_InstanceID)
             {
+                v2f output = (v2f)0;
                 InitIndirectDrawArgs(0);
 
                 VertexPositionInputs vertexInput; //= GetVertexPositionInputs(input.positionOS.xyz);
@@ -136,12 +143,13 @@ Shader "Universal Render Pipeline/Unlit Indirect Shader"
                 );
                 
                 //float3 worldPos = input.positionOS.xyz + transpose(_Matrices[instanceID])[3].xyz;//这句是使用matrices得时候用的
-                float3 worldPos = input.positionOS.xyz + _Float3Pos[instanceID].xyz;
                 
-                v2f output = (v2f)0;
+                float3 worldPos = input.positionOS.xyz + _Float3Pos[instanceID ].xyz;
+               
                 UNITY_SETUP_INSTANCE_ID(input);
                 UNITY_TRANSFER_INSTANCE_ID(input, output);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
+
                 
                 vertexInput.positionWS = TransformObjectToWorld(worldPos);
                 vertexInput.positionVS = TransformWorldToView(vertexInput.positionWS);
@@ -173,19 +181,18 @@ Shader "Universal Render Pipeline/Unlit Indirect Shader"
                 output.normalWS = normalInput.normalWS;
                 output.viewDirWS = viewDirWS;
                 #endif
-
-                output.instanceId = instanceID;
+                
                 
                 return output;
             }
 
             
-            half4 frag(v2f input) : SV_Target
+            half4 frag(v2f input,uint instanceId:SV_InstanceID) : SV_Target
             {
                 UNITY_SETUP_INSTANCE_ID(input);
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
                 
-                half2 uv = input.uv;
+                half2 uv = half2(input.uv.x /12,input.uv.y/8);
                 half4 texColor = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
                 half3 color = texColor.rgb * _BaseColor.rgb;
                 
@@ -199,7 +206,7 @@ Shader "Universal Render Pipeline/Unlit Indirect Shader"
                 #endif
 
                 InputData inputData;
-                InitializeInputData(input, inputData);
+                InitializeInputData(/*input,*/ inputData);
                 SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv, _BaseMap);
                 
             #ifdef _DBUFFER
@@ -226,7 +233,7 @@ Shader "Universal Render Pipeline/Unlit Indirect Shader"
             #endif
                 
                  
-                float3 matColor = _Colors[input.instanceId];
+                float3 matColor = _Colors[instanceId];
                 finalColor.rgb *= matColor;
                 finalColor.rgb = MixFog(finalColor.rgb , fogFactor);
                 

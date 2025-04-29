@@ -51,12 +51,13 @@ namespace RenderBox.SandSimulate
         public Cell[,] cellArray;
 
         private Color[] colors;
-
+        public int penSlim = 1;
+        private bool isWriting = false;
         
         // Start is called before the first frame update
         void Awake()
         {
-            size = 48;
+            size = 128;
             cellArray = new Cell[size,size];
             for (int i = 0; i < size; i++)
             {
@@ -79,7 +80,6 @@ namespace RenderBox.SandSimulate
             texture2D.SetPixel(10,10,Color.black);
             texture2D.Apply();
             rd.material.SetTexture(mainTex,texture2D);
-            Application.targetFrameRate = 60;
         }
 
         // Update is called once per frame
@@ -87,6 +87,7 @@ namespace RenderBox.SandSimulate
         {
             if (Input.GetMouseButton(0))
             {
+                isWriting = true;
                 var pos = Input.mousePosition;
                 pos.z = 0;
                 var worldPos = c.ScreenToWorldPoint(pos);
@@ -97,13 +98,40 @@ namespace RenderBox.SandSimulate
                 }
                 else
                 {
-                    Paint(GetIndex(localPos)); 
+                    var index = GetIndex(localPos);
+                    
+                    for (int i = 0; i < penSlim; i++)
+                    {
+                        if (i == 0)
+                        {
+                            Paint(index);
+                            continue;
+                        }
+                        var xl = index.Item1 - i;
+                        if (xl >= 0)
+                        {
+                            Paint((xl,index.Item2));
+                        }
+                        var xr = index.Item1 + i;
+                        if (xr <= size -  1)
+                        {
+                            Paint((xr,index.Item2));
+                        }
+                    }
+                    
+                    
                 }
+            }
+            else
+            {
+                isWriting = false;
             }
 
             if (cellArray is not null)
             {
-                Fall();
+                if (!isWriting)
+                    Fall();
+                PaintAll();
             }
             
         }
@@ -125,23 +153,16 @@ namespace RenderBox.SandSimulate
             int y = index.Item2;
             cellArray[x, y].pixel ??= new SandPixel()
             {
-                nowColor = new Color(0,1,0,0.2f),
+                nowColor = new Color(0.8745099f,0.7725491f,0.6392157f),
                 sandType = ESandType.Solid,
                 sandState = ESandState.Falling
             };
         }
-        
-        
 
-        void Fall()
+
+        
+        void PaintAll()
         {
-            for (int i = 0; i < size; i++)
-            {
-                for (int j = 0; j < size;j++)
-                {
-                    Step(i,j);
-                }
-            }
             //获取所有的颜色
             //TODO 不知道为什么这里的颜色需要镜像
             for (int i = 0; i < size; i++)
@@ -162,6 +183,18 @@ namespace RenderBox.SandSimulate
             }
             texture2D.SetPixels(colors);
             texture2D.Apply();
+        }
+        
+        void Fall()
+        {
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size;j++)
+                {
+                    Step(i,j);
+                }
+            }
+            
             
         }
 
@@ -177,6 +210,15 @@ namespace RenderBox.SandSimulate
                 if (cellArray[x,y-1].pixel is null)
                 {
                     cellArray[x,y-1].pixel = cellArray[x, y].pixel;
+                    cellArray[x, y].pixel = null;
+                }
+                else if (x >= 1&& cellArray[x-1,y-1].pixel is null)
+                {
+                    cellArray[x-1,y-1].pixel = cellArray[x, y].pixel;
+                    cellArray[x, y].pixel = null;
+                }else if (x < size - 1 && cellArray[x+1,y-1].pixel is null)
+                {
+                    cellArray[x+1,y-1].pixel = cellArray[x, y].pixel;
                     cellArray[x, y].pixel = null;
                 }
                 else
