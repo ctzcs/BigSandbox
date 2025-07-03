@@ -8,6 +8,7 @@ using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace NSprites
 {
@@ -240,6 +241,7 @@ namespace NSprites
             // we need to use this method every new frame, because query somehow gets invalidated
             var query = systemData.Query;
             query.SetSharedComponentFilter(new SpriteRenderID { id = ID });
+            
 
             PropertiesContainer.ResetHandles();
 
@@ -572,8 +574,18 @@ namespace NSprites
         /// <summary>Draws instances in quantity based on the number of entities related to this <see cref="RenderArchetype"/>. Call it after <see cref="ScheduleUpdate"/> and <see cref="CompleteUpdate"/>.</summary>
         public void Draw()
         {
-            if(_entityCount != 0)
-                Graphics.DrawMeshInstancedProcedural(_mesh, 0, Material, _bounds, _entityCount, _materialPropertyBlock);
+            if (_entityCount != 0)
+            {
+                //Graphics.DrawMeshInstancedProcedural(_mesh, 0, Material, _bounds, _entityCount, _materialPropertyBlock);
+                RenderParams rp = new RenderParams(Material) // 必须通过构造函数传入材质
+                {
+                    matProps = _materialPropertyBlock,
+                    worldBounds = _bounds,
+                    receiveShadows = Material.enableInstancing,
+                };
+                Graphics.RenderMeshPrimitives(rp,_mesh, 0, _entityCount);
+            }
+                
         }
         
         /// <summary><inheritdoc cref="CompleteUpdate"/>

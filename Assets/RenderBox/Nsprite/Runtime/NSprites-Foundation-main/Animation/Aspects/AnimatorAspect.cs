@@ -1,4 +1,5 @@
 ﻿using Unity.Entities;
+using UnityEngine;
 
 namespace NSprites
 {
@@ -18,11 +19,14 @@ namespace NSprites
             ref var animSet = ref _animationSetLink.ValueRO.value.Value;
             var setToAnimIndex = -1;
             for (int i = 0; i < animSet.Length; i++)
+            {
                 if (animSet[i].ID == toAnimationIndex)
                 {
                     setToAnimIndex = i;
                     break;
                 }
+            }
+                
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             if (setToAnimIndex == -1)
@@ -49,5 +53,8 @@ namespace NSprites
 
         public void ResetAnimation(in double worldTime) =>
             SetToFrame(0, worldTime);
+        
+        
+        public int GetNowAnimationIndex=> _animationIndex.ValueRO.value;
     }
 }

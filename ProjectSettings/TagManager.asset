@@ -44,8 +44,14 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Bg
+    uniqueID: 389215515
+    locked: 0
   - name: Player
     uniqueID: 2667152487
+    locked: 0
+  - name: Effect
+    uniqueID: 2009002805
     locked: 0
   - name: UI
     uniqueID: 2578233297

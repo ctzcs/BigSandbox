@@ -20,11 +20,13 @@ namespace NSprites
             // instantiate and initialize system data
             var renderArchetypeStorage = new RenderArchetypeStorage{ SystemData = new SystemData { Query = state.GetEntityQuery(NSpritesUtils.GetDefaultComponentTypes()) }};
             renderArchetypeStorage.Initialize();
+            //添加托管组件
             state.EntityManager.AddComponentObject(state.SystemHandle, renderArchetypeStorage);
         }
 
         public void OnDestroy(ref SystemState state)
         {
+            //销毁单例组件
             SystemAPI.ManagedAPI.GetComponent<RenderArchetypeStorage>(state.SystemHandle).Dispose();
         }
 

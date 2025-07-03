@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 5195642490028394528}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -999, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -49,12 +49,12 @@ MonoBehaviour:
     InitialAnimationIndex: 0
   RegisterSpriteData:
     SpriteRenderData:
-      Material: {fileID: 2100000, guid: d84d30a8fe326be4f98378dcb774dabf, type: 2}
+      Material: {fileID: 2100000, guid: 3b430edb05022c44bbba1bfb72bdcd2d, type: 2}
       PropertiesSet: {fileID: 11400000, guid: 99d3374c56bc41b408704563b4c0e25e, type: 2}
   RenderSettings:
     Pivot:
       x: 0.5
-      y: 0.5
+      y: 0
     Size:
       x: 1
       y: 1
@@ -71,4 +71,4 @@ MonoBehaviour:
   Sorting:
     StaticSorting: 0
     SortingIndex: 0
-    SortingLayer: 0
+    SortingLayer: -1627814809

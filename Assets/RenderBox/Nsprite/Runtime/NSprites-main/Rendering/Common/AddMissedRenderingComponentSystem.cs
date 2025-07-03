@@ -3,7 +3,7 @@ using Unity.Entities;
 
 namespace NSprites
 {
-    [UpdateInGroup(typeof(PresentationSystemGroup))]
+    /*[UpdateInGroup(typeof(PresentationSystemGroup))]
     [UpdateBefore(typeof(SpriteRenderingSystem))]
     [WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor | WorldSystemFilterFlags.EntitySceneOptimizations)]
     public partial struct AddMissedRenderingComponentSystem : ISystem
@@ -25,5 +25,28 @@ namespace NSprites
         [BurstCompile]
         public void OnUpdate(ref SystemState state) 
             => state.EntityManager.AddChunkComponentData(_query, new PropertyPointerChunk());
+    }*/
+    
+    
+    [UpdateInGroup(typeof(PresentationSystemGroup))]
+    [UpdateBefore(typeof(SpriteRenderingSystem))]
+    [WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor | WorldSystemFilterFlags.EntitySceneOptimizations)]
+    public partial class AddMissedRenderingComponentSystem : SystemBase
+    {
+        private EntityQuery _query;
+        
+        protected override void OnCreate() 
+        {
+            _query = SystemAPI.QueryBuilder()
+                .WithAll<PropertyPointer>()
+                .WithNoneChunkComponent<PropertyPointerChunk>()
+                .WithOptions(EntityQueryOptions.IncludePrefab | EntityQueryOptions.IncludeDisabledEntities | EntityQueryOptions.Default | EntityQueryOptions.IgnoreComponentEnabledState)
+                .Build();
+            
+            CheckedStateRef.RequireForUpdate(_query);   
+        }
+        
+        protected override void OnUpdate() 
+            => EntityManager.AddChunkComponentData(_query, new PropertyPointerChunk());
     }
 }

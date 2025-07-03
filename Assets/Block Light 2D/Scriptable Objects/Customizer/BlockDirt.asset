@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31f0dcc37a91b0741a86dc1f4e7aa381, type: 3}
+  m_Name: BlockDirt
+  m_EditorClassIdentifier: 
+  sliderData:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  itemName: Dirt
+  itemTile: {fileID: 11400000, guid: 129d4640d33be7940aca723450b2b5d3, type: 2}
+  itemType: 3
+  gridSprite: {fileID: 21300000, guid: 678b9a38e458def4996b17ff18b81b45, type: 3}
